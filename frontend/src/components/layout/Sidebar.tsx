@@ -7,15 +7,17 @@ import {
   Layers, 
   TrendingUp, 
   Database,
-  Cpu
+  Cpu,
+  Globe
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { name: 'Dashboard', path: '/', icon: Activity },
-  { name: 'Opportunities', path: '/opportunities', icon: Lightbulb },
-  { name: 'Signals & Evidence', path: '/signals', icon: Layers },
-  { name: 'Market Trends', path: '/analytics', icon: TrendingUp },
-  { name: 'Ingestion & Jobs', path: '/jobs', icon: Database },
+  { name: 'Dashboard', path: '/app', icon: Activity },
+  { name: 'Opportunities', path: '/app/opportunities', icon: Lightbulb },
+  { name: 'Signals & Evidence', path: '/app/signals', icon: Layers },
+  { name: 'Market Trends', path: '/app/analytics', icon: TrendingUp },
+  { name: 'Ingestion & Jobs', path: '/app/jobs', icon: Database },
+  { name: 'Landing Overview', path: '/', icon: Globe },
 ];
 
 export const Sidebar: React.FC = () => {

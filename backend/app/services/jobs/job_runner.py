@@ -14,6 +14,7 @@ from backend.app.models.opportunity import Opportunity, OpportunityEvidence
 from backend.app.models.job import IngestionJob
 
 from backend.app.services.preprocessing.cleaner import DocumentCleaner
+from backend.app.services.preprocessing.processor import DocumentProcessor
 from backend.app.services.ingestion.synthetic_demo import SyntheticDemoAdapter
 from backend.app.services.ingestion.product_hunt import ProductHuntAdapter
 from backend.app.services.ingestion.reddit import RedditAdapter
@@ -116,8 +117,11 @@ class JobRunner:
                     doc = Document(
                         source_id=source.id if source else None,
                         external_id=doc_data.get("external_id"),
+                        document_type=doc_data.get("document_type", "post"),
+                        parent_external_id=doc_data.get("parent_external_id"),
+                        thread_id=doc_data.get("thread_id"),
                         title=title,
-                        content=DocumentCleaner.clean_text(content),
+                        content=content,  # Preserve untouched original raw text
                         author=doc_data.get("author"),
                         url=url,
                         upvotes=doc_data.get("upvotes", 0),
@@ -129,10 +133,11 @@ class JobRunner:
                     )
                     db.add(doc)
                     await db.flush()
+                    await DocumentProcessor.process_document(doc=doc, db=db, allowed_languages=["en"])
                     saved_documents.append(doc)
 
                 job.documents_processed = len(saved_documents)
-                logs.append(f"Validated and stored {len(saved_documents)} unique documents.")
+                logs.append(f"Validated, normalized, and stored {len(saved_documents)} unique documents.")
                 job.logs = list(logs)
                 await db.commit()
 

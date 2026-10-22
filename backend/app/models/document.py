@@ -8,6 +8,7 @@ from backend.app.db.base import Base, TimestampMixin, utc_now
 if TYPE_CHECKING:
     from backend.app.models.source import Source
     from backend.app.models.signal import Signal
+    from backend.app.models.processed_document import ProcessedDocument
 
 
 class Document(Base, TimestampMixin):
@@ -25,8 +26,11 @@ class Document(Base, TimestampMixin):
         index=True
     )
     external_id: Mapped[Optional[str]] = mapped_column(String(100), index=True, nullable=True)
+    document_type: Mapped[str] = mapped_column(String(20), default="post", server_default="post", index=True, nullable=False)
+    parent_external_id: Mapped[Optional[str]] = mapped_column(String(100), index=True, nullable=True)
+    thread_id: Mapped[Optional[str]] = mapped_column(String(100), index=True, nullable=True)
     title: Mapped[str] = mapped_column(String(500), nullable=False)
-    content: Mapped[str] = mapped_column(Text, nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)  # Preserved original raw text
     author: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     url: Mapped[str] = mapped_column(String(1000), nullable=False)
     upvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
@@ -46,6 +50,12 @@ class Document(Base, TimestampMixin):
     signals: Mapped[List["Signal"]] = relationship(
         "Signal",
         back_populates="document",
+        cascade="all, delete-orphan"
+    )
+    processed_document: Mapped[Optional["ProcessedDocument"]] = relationship(
+        "ProcessedDocument",
+        back_populates="raw_document",
+        uselist=False,
         cascade="all, delete-orphan"
     )
 

@@ -6,12 +6,16 @@
   color-scheme: dark;
 }
 
-body {
+html, body {
   margin: 0;
   background-color: #090d16;
   color: #f1f5f9;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
+}
+
+*, button, input, select, textarea {
+  font-family: inherit;
 }
 
 /* Custom scrollbars */
@@ -87,3 +91,236 @@ body {
 .animate-radar {
   animation: radar-pulse 2s infinite;
 }
+
+/* Axiom Research Motion System */
+@keyframes ax-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ax-zoom-fade {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ax-fade {
+  animation: ax-fade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ax-zoom-fade {
+  animation: ax-zoom-fade 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* C&R Research Motion System */
+@keyframes cir02 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cir01 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes scr {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes tunnelLoop {
+  0% {
+    transform: perspective(200px) scale(0.36);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(200px) scale(1.4) translateZ(100px);
+    opacity: 0;
+  }
+}
+
+.animate-cir02 {
+  animation: cir02 30s linear infinite;
+}
+
+.animate-cir01 {
+  animation: cir01 45s linear infinite;
+}
+
+.animate-scr {
+  animation: scr 2s linear infinite;
+}
+
+.line-tunnel {
+  animation: tunnelLoop 4s linear infinite;
+}
+
+/* Dynamic Crystalized Orb Levitating & Energy Beam System */
+@keyframes orbLevitate1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1deg);
+  }
+}
+
+@keyframes orbLevitate2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(16px) rotate(-1deg);
+  }
+}
+
+@keyframes pulseBeamVertical {
+  0% {
+    top: 0%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes pulseGlowAura {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spinRadarCounter {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-orb-levitate-1 {
+  animation: orbLevitate1 7s ease-in-out infinite;
+}
+
+.animate-orb-levitate-2 {
+  animation: orbLevitate2 7s ease-in-out infinite;
+  animation-delay: -3.5s;
+}
+
+.animate-pulse-aura {
+  animation: pulseGlowAura 4s ease-in-out infinite;
+}
+
+.animate-pulse-beam-v {
+  animation: pulseBeamVertical 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-spin-counter {
+  animation: spinRadarCounter 20s linear infinite;
+}
+
+/* C&R Signature Pill Button */
+.cnr-pill-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 9999px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cnr-pill-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #333333;
+  border-radius: inherit;
+  transition: 0.3s;
+}
+
+.cnr-pill-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #007F8F, #33C3D5);
+  border-radius: inherit;
+  transform: scale(0.9, 0.8);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.cnr-pill-btn:hover::after {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.cnr-pill-btn:hover::before {
+  transform: scale(1.08, 1.15);
+  opacity: 0;
+}
+
+/* Lenis Smooth Scroll System */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+

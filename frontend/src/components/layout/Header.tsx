@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sparkles, Globe } from 'lucide-react';
 import { dashboardService } from '../../services/dashboardService';
 import { SystemHealth } from '../../types/api';
 import { Button } from '../common/Button';
@@ -76,6 +77,16 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
             Run Scout Pipeline
           </Button>
         )}
+
+        {/* Link back to Landing */}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-900/60 text-xs font-mono text-slate-300 hover:text-white transition-colors"
+          title="Return to Axiom-styled landing page"
+        >
+          <Globe className="w-3.5 h-3.5 text-[#DA840A]" />
+          <span>Landing</span>
+        </Link>
       </div>
     </header>
   );
