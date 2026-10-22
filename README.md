@@ -1,277 +1,299 @@
-# GreatScout — AI-Powered Market Intelligence Platform
-> **Tagline:** *"Scout Smart, Build Better."*
+<div align="center">
 
-GreatScout is an end-to-end market intelligence and product opportunity discovery platform designed for founders, entrepreneurs, developers, and product managers. 
+# GreatScout
 
-Instead of functioning as a random AI startup idea generator, GreatScout works backwards from **real-world recurring user friction**: analyzing discussions, complaints, feature requests, and unmet needs from **Product Hunt** and **Reddit**, extracting structured friction signals, clustering them semantically with vector embeddings, and computing an explainable opportunity score with 100% source traceability.
+### Evidence-backed product opportunity discovery
 
----
+**Scout Smart, Build Better.**
+Discover problems. Validate opportunities. Build with evidence.
 
-## 🌟 Core Features
+![Python](https://img.shields.io/badge/Python-FastAPI-3776AB?style=flat-square&logo=python&logoColor=white)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Status](https://img.shields.io/badge/Status-In%20development-F2B84B?style=flat-square)
 
-1. **Executive Intelligence Dashboard**:
-   - Live KPI counters for Ingested Documents, Extracted Signals, Semantic Clusters, and Discovered Opportunities.
-   - Interactive Source Breakdown (Product Hunt vs Reddit volume) and Friction Taxonomy distributions.
-   - High-scoring product gap showcase with direct links to deep-dive dossiers.
+[Overview](#overview) · [How it works](#how-it-works) · [Architecture](#architecture) · [Scoring](#opportunity-scoring) · [API](#api) · [Getting started](#getting-started) · [Roadmap](#roadmap)
 
-2. **Modular Data Ingestion Engine**:
-   - **Product Hunt GraphQL API client**: Ingests discussions, reviews, and community threads.
-   - **Reddit Client**: Ingests rants and complaints from `r/SaaS`, `r/startups`, and `r/webdev`.
-   - **Zero-Credential Demo Mode**: Ships with rich, realistic problem posts across 5 major software categories (Developer Tools, SaaS Operations, AI Automation, Remote Work, E-Commerce), explicitly tagged with `is_synthetic: true`.
-
-3. **Document Preprocessing & Deduplication**:
-   - Automatic whitespace normalization, minimum length validation, and spam detection.
-   - Deterministic SHA-256 content hashing for deduplication.
-
-4. **AI Signal Extraction**:
-   - Extracts atomic friction points: `pain_point`, `complaint`, `feature_request`, `unmet_need`, and `workflow_problem`.
-   - Computes severity (1-5), sentiment polarity (-1.0 to 1.0), emotional urgency, and commercial intent.
-   - Configurable LLM provider support (OpenAI, Gemini, Anthropic) with local heuristic NLP fallback for zero-cost offline execution.
-
-5. **Dense Vector Embeddings & Semantic Clustering**:
-   - 384-dimensional dense semantic vectors.
-   - HDBSCAN / Cosine distance clustering baseline with cluster centroid calculation and coherence scoring.
-
-6. **Transparent 7-Pillar Opportunity Scoring**:
-   $$\text{Opportunity Score} = 0.25 \times \text{Demand} + 0.25 \times \text{Pain} + 0.15 \times \text{Evidence} + 0.15 \times \text{WTP} + 0.10 \times \text{Vacuum} + 0.05 \times \text{Feasibility} + 0.05 \times \text{Recency}$$
-   - **Empirical Measured Dimensions (85% Aggregate Weight)**:
-     - **Demand Volume (25%)**: Normalized cross-thread frequency and source diversity.
-     - **Pain Severity (25%)**: Severity level (1-5) and negative emotional sentiment polarity.
-     - **Evidence Strength (15%)**: Verbatim quote density and sample corroboration.
-     - **Willingness to Pay (15%)**: Budget mentions, revenue impact, and commercial intent.
-     - **Competitive Vacuum (10%)**: Deficiencies and friction cited regarding existing tools.
-   - **Heuristic & Temporal Dimensions (15% Aggregate Weight)**:
-     - **Technical Feasibility (5%)**: Software buildability heuristic (flagged explicitly as estimate).
-     - **Evidence Recency (5%)**: Time-decay relevance modeling.
-
-7. **Evidence-Backed Opportunity Dossiers**:
-   - Complete product gap thesis, target ICP persona, "Why Current Solutions Fail", and recommended product wedge.
-   - **100% Traceability Graph**: Every claim links directly to the underlying cluster, atomic signals, and verbatim quotes with direct URLs to the original posts.
-
-8. **Market Trends & Sentiment Dynamics**:
-   - Daily tracking of critical urgency spikes and negative sentiment friction.
-   - Category gap concentration charts.
-
-9. **Background Ingestion Job Monitor**:
-   - Bounded async background workers with real-time progress tracking and live execution logs.
-
-10. **Comprehensive Documentation Suite**:
-    - [AI Opportunity Discovery Pipeline Guide](docs/AI_PIPELINE.md)
-    - [Scoring Methodology & 7-Pillar Formula](docs/SCORING_METHODOLOGY.md)
-    - [External API Integrations Guide](docs/API_INTEGRATIONS.md)
-    - [Local Development Setup](docs/LOCAL_SETUP.md)
-    - [Production Deployment Guide](docs/DEPLOYMENT.md)
-    - [System Verification Report](docs/VERIFICATION_REPORT.md)
-    - [System Architecture](docs/ARCHITECTURE.md)
-    - [API Contract & Specifications](docs/API_CONTRACT.md)
+</div>
 
 ---
 
-## 🏗️ System Architecture
+## Overview
 
-```
-+---------------------------------------------------------------------------------------+
-|                                    DATA SOURCES                                       |
-|  +---------------------------+  +----------------------+  +------------------------+  |
-|  | Product Hunt GraphQL API  |  | Reddit PRAW / Feeds  |  | Realistic Synthetic    |  |
-|  | (Discussions, Reviews)    |  | (r/SaaS, r/startups) |  | Demo Dataset Engine    |  |
-|  +-------------+-------------+  +----------+-----------+  +-----------+------------+  |
-+----------------|---------------------------|--------------------------|---------------+
-                 v                           v                          v
-+---------------------------------------------------------------------------------------+
-|                              INGESTION & PREPROCESSING                                |
-|  - Bounded background worker jobs with progress tracking                              |
-|  - Content sanitization, deduplication (SHA-256 content hashes)                        |
-|  - Metadata normalization (upvotes, author, comments, timestamps, permalinks)          |
-+--------------------------------------------+------------------------------------------+
-                                             v
-+---------------------------------------------------------------------------------------+
-|                               AI SIGNAL EXTRACTION                                    |
-|  - LLM extraction pipeline (OpenAI / Gemini / Anthropic / Local heuristic engine)     |
-|  - Typed signal taxonomy: PAIN_POINT, COMPLAINT, FEATURE_REQUEST, UNMET_NEED, WORKAROUND|
-|  - Severity score (1-5), sentiment polarity (-1.0 to 1.0), raw quote extraction       |
-+--------------------------------------------+------------------------------------------+
-                                             v
-+---------------------------------------------------------------------------------------+
-|                          VECTOR EMBEDDINGS & CLUSTERING                               |
-|  - Dense 384-dimensional vector embeddings                                            |
-|  - Stored in PostgreSQL with pgvector (or dual SQLite fallback for local test/dev)    |
-|  - Density-based clustering (HDBSCAN baseline) to discover cohesive problem themes    |
-+--------------------------------------------+------------------------------------------+
-                                             v
-+---------------------------------------------------------------------------------------+
-|                        EXPLAINABLE OPPORTUNITY SCORING                                |
-|  - Demand (30%) + Pain (30%) + Willingness-to-Pay (20%) + Competitive Vacuum (20%)    |
-+--------------------------------------------+------------------------------------------+
-                                             v
-+---------------------------------------------------------------------------------------+
-|                           OPPORTUNITY DOSSIER SYNTHESIS                               |
-|  - 100% Traceable Evidence Graph (Opportunity -> Cluster -> Signals -> Source Posts)  |
-+--------------------------------------------+------------------------------------------+
+Product teams rarely lack feedback. They lack a way to read it. Real user needs are scattered across communities, written in inconsistent language, and buried in thousands of threads no one has time to analyze by hand.
+
+**GreatScout turns that noise into ranked, traceable opportunities.** It ingests public discussions, extracts pain points and feature requests, groups similar problems with semantic analysis, scores each cluster on measurable evidence, and shows every insight next to the source records that support it.
+
+> **Evidence → Pattern → Opportunity → Product Insight**
+
+GreatScout does not hand you generic product ideas. It shows you *why* an opportunity matters and *what proves it*.
+
+---
+
+## What you get
+
+| Capability | What it does |
+|---|---|
+| **Market data ingestion** | Collects public discussions and product feedback from authorized sources |
+| **Preprocessing** | Cleans, normalizes, and de-duplicates records; rejects malformed data |
+| **Signal extraction** | Identifies pain points, feature requests, and unmet needs |
+| **Semantic analysis** | Recognizes the same problem described in different words |
+| **Opportunity clustering** | Groups related signals into coherent patterns |
+| **Opportunity scoring** | Ranks clusters using explicit, documented metrics |
+| **Evidence traceability** | Links every insight back to its original source records |
+| **Trend analysis** | Surfaces recurring themes and shifts in market signals |
+| **Interactive dashboard** | Explore opportunities, clusters, and evidence in one place |
+
+> Availability of individual capabilities depends on the current implementation and configured data sources.
+
+---
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Define scope] --> B[Collect data]
+    B --> C[Preprocess]
+    C --> D[Extract signals]
+    D --> E[Embed]
+    E --> F[Cluster]
+    F --> G[Score]
+    G --> H[Attach evidence]
+    H --> I[Human review]
 ```
 
+1. **Collect.** Pull records from authorized sources such as Product Hunt and Reddit.
+2. **Preprocess.** Validate, normalize, and clean. Invalid records are logged or rejected, never silently kept.
+3. **Extract.** NLP isolates structured signals: pain points, feature requests, unmet needs.
+4. **Embed and cluster.** Semantic similarity groups differently worded signals into one problem.
+5. **Score.** Each cluster is measured on recurrence, engagement, urgency, and evidence diversity.
+6. **Explain.** Every ranked opportunity carries its supporting signals and source references.
+7. **Validate.** A human reviews, challenges, and decides.
+
 ---
 
-## 🚀 Quickstart & Setup
+## Architecture
 
-### Option 1: Run with Docker Compose (Recommended)
+```mermaid
+flowchart TB
+    U[Product teams & researchers]
 
-Requires Docker and Docker Compose:
+    subgraph FE[Frontend · React]
+        UI[Dashboard · Explorer · Trends · Evidence]
+    end
+
+    subgraph BE[Application layer · FastAPI]
+        API[REST API] --> VAL[Pydantic validation] --> SVC[Services]
+    end
+
+    subgraph AI[Intelligence layer]
+        ING[Ingestion] --> PRE[Preprocessing] --> EXT[Signal extraction]
+        EXT --> EMB[Embeddings] --> CLU[Clustering] --> SCO[Scoring] --> INS[Insights]
+    end
+
+    subgraph DATA[Data layer]
+        DB[(PostgreSQL)]
+        VEC[(Vector storage)]
+    end
+
+    subgraph SRC[Sources]
+        PH[Product Hunt API]
+        RD[Reddit API]
+        OT[Other authorized sources]
+    end
+
+    U --> FE --> API
+    SVC --> ING
+    ING --> PH & RD & OT
+    SVC <--> DB
+    EMB <--> VEC
+    INS --> DB
+```
+
+> This is the intended logical architecture. Verify connectors, storage choices, and modules against the repository configuration.
+
+### Data model
+
+```mermaid
+flowchart LR
+    A[raw_documents] --> B[processed_documents] --> C[extracted_signals]
+    C --> D[embeddings] --> E[clusters] --> F[cluster_metrics] --> G[opportunities]
+    G -. supporting evidence .-> C
+```
+
+| Entity | Purpose |
+|---|---|
+| Raw documents | Preserve source records and ingestion metadata |
+| Processed documents | Cleaned, normalized records |
+| Extracted signals | Identified problems and user needs |
+| Embeddings | Vectors for semantic similarity |
+| Clusters | Groups of related signals |
+| Cluster metrics | Measurements used to evaluate clusters |
+| Opportunities | Ranked product opportunity candidates |
+
+These are logical names, not a guarantee of exact table names.
+
+---
+
+## Opportunity scoring
+
+Scores are built from four measurable dimensions:
+
+| Metric | Question it answers |
+|---|---|
+| **Recurrence** | How often does this problem appear? |
+| **Engagement** | How much do people react to it? |
+| **Urgency** | How strongly is the need expressed? |
+| **Evidence diversity** | Does it appear across independent sources and authors? |
+
+Scoring should use documented metrics, consistent normalization, configurable weights where appropriate, and explicit handling of missing data.
+
+Each opportunity should include:
+
+- A concise problem statement
+- Supporting signals and source references
+- The number of relevant records
+- The metrics behind its score
+- Confidence and data-quality notes
+- Assumptions and limitations
+
+> A high score marks a candidate worth investigating. It does not guarantee demand, feasibility, or commercial success.
+
+---
+
+## Interface
+
+| Module | Purpose |
+|---|---|
+| **Home** | Entry point and workflow overview |
+| **Market dashboard** | Radar of clusters, signal distribution, velocity |
+| **Opportunity explorer** | Ranked opportunities, competitor gaps, deep dives |
+| **Signal explorer** | Extracted pain points and feature requests |
+| **Trend analysis** | Topic growth and recurring themes over time |
+| **Evidence view** | Verbatim source records behind every insight |
+
+The guiding rule is traceability: from any opportunity summary, a user should reach its supporting evidence in a click or two.
+
+---
+
+## API
+
+GreatScout exposes a REST API between frontend and backend.
+
+| Function | Example endpoint |
+|---|---|
+| Health check | `GET /health` |
+| List clusters | `GET /clusters` |
+| Cluster details | `GET /clusters/{id}` |
+| List opportunities | `GET /opportunities` |
+| Opportunity details | `GET /opportunities/{id}` |
+| Trends | `GET /trends` |
+
+> These are candidate patterns. The OpenAPI specification and backend route definitions are the source of truth.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, JavaScript, CSS |
+| Motion | GSAP, Lenis *(where configured)* |
+| Backend | Python, FastAPI, Pydantic |
+| Data access | SQLAlchemy, Alembic |
+| Database | PostgreSQL, pgvector *(if configured)* |
+| AI processing | NLP, embeddings, clustering |
+| Data sources | Authorized external APIs |
+| Testing | Automated backend and frontend tests |
+| Deployment | Docker *(if configured)* |
+
+Check dependency manifests before treating every item as installed.
+
+---
+
+## Getting started
+
+> Replace the placeholders below with the repository's actual commands.
+
 ```bash
-docker compose up --build
-```
+# 1. Clone
+git clone <repo-url> && cd greatscout
 
-- **Frontend Application**: `http://localhost:5173` (or `http://localhost:80`)
-- **Backend API & Swagger Docs**: `http://localhost:8000/docs`
-- **PostgreSQL Database with pgvector**: `localhost:5432`
+# 2. Configure secrets (never commit these)
+cp .env.example .env   # add API credentials and database URL
 
----
-
-### Option 2: Run Locally for Development
-
-#### 1. Backend Setup (FastAPI & SQLAlchemy)
-
-```bash
-# Navigate to backend directory
+# 3. Backend
 cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-.\venv\Scripts\activate
-# Linux/macOS:
-# source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
+alembic upgrade head
+uvicorn app.main:app --reload
 
-# Run database migrations
-python -m alembic -c backend/alembic.ini upgrade head
-
-# Seed initial demo dataset (optional)
-python backend/scripts/seed.py
-
-# Start FastAPI dev server
-uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
-```
-API Documentation will be live at `http://127.0.0.1:8000/docs`.
-
-#### 2. Frontend Setup (React + TypeScript + Vite)
-
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
+# 4. Frontend
+cd ../frontend
 npm install
-
-# Start Vite dev server
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🧪 Running Automated Tests
+## Roadmap
 
-### Backend Pytest Suite
-Verifies data models, database relationships, full traceability graphs, preprocessing, clustering, opportunity scoring formulas, and all REST endpoints:
-```bash
-python -m pytest backend/tests -v
-```
-*Current test suite: **23 passed in 0.70s**.*
+Each stage is complete only when its implementation **and** tests are verified.
 
-### Frontend Vitest Suite
-Verifies React components, design system elements, and user interfaces:
-```bash
-cd frontend
-npm test
-```
-*Current test suite: **1 passed**.*
+| Stage | Done when |
+|---|---|
+| Data ingestion | Sources are accessed and records persisted reliably |
+| Preprocessing | Invalid, duplicate, and malformed records are handled |
+| Signal extraction | Structured signals are generated and evaluated |
+| Semantic analysis | Embeddings and clusters are validated |
+| Opportunity scoring | Scores are reproducible and explainable |
+| API integration | Endpoints return validated, consistent responses |
+| Frontend integration | Dashboard consumes real backend data |
+| End-to-end validation | The full workflow passes integration tests |
 
-### Production Build Verification
-```bash
-cd frontend
-npm run build
-```
+Build incrementally: reliable ingestion first, then extraction, clustering, scoring, API, and dashboard.
 
 ---
 
-## 📂 Project Structure
+## Principles
 
-```
-GREATSCOUT-/
-├── backend/
-│   ├── alembic/                      # Database migrations
-│   │   ├── versions/
-│   │   └── env.py
-│   ├── app/
-│   │   ├── api/v1/endpoints/         # REST API route handlers
-│   │   │   ├── dashboard.py          # KPIs & activity feed
-│   │   │   ├── opportunities.py      # Opportunity catalog & dossiers
-│   │   │   ├── jobs.py               # Ingestion pipeline triggers & status
-│   │   │   ├── signals.py            # Signals & documents exploration
-│   │   │   └── health.py             # Diagnostic & health check
-│   │   ├── core/config.py            # Pydantic BaseSettings & env configs
-│   │   ├── db/
-│   │   │   ├── session.py            # Async engine & session factory
-│   │   │   └── custom_types.py       # Dual-dialect VectorType (Postgres pgvector / SQLite)
-│   │   ├── models/                   # SQLAlchemy 2.0 ORM models
-│   │   │   ├── source.py
-│   │   │   ├── document.py
-│   │   │   ├── signal.py
-│   │   │   ├── cluster.py
-│   │   │   ├── opportunity.py
-│   │   │   └── job.py
-│   │   ├── schemas/                  # Pydantic validation schemas
-│   │   ├── services/
-│   │   │   ├── ingestion/            # Product Hunt, Reddit & Synthetic adapters
-│   │   │   ├── preprocessing/        # Cleaner & deduplicator
-│   │   │   ├── ai/                   # Signal extractor & opportunity synthesizer
-│   │   │   ├── vector/               # VectorEmbedder & SemanticClusterer
-│   │   │   ├── scoring/              # OpportunityScorer (4-pillar formula)
-│   │   │   └── jobs/                 # JobRunner background worker
-│   │   └── main.py                   # FastAPI application factory
-│   ├── scripts/seed.py               # CLI database seeding tool
-│   ├── tests/                        # Comprehensive Pytest suite
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── common/               # Badge, Button, Card, ScoreGauge, ProgressBar
-│   │   │   ├── layout/               # Sidebar, Header, MainLayout
-│   │   │   └── jobs/                 # IngestionModal
-│   │   ├── pages/
-│   │   │   ├── DashboardPage.tsx     # KPI metrics, source share, top gaps
-│   │   │   ├── OpportunitiesPage.tsx # Search, category filters, score sliders
-│   │   │   ├── OpportunityDetailPage.tsx # Dossier & Traceable Citation Inspector
-│   │   │   ├── SignalsPage.tsx       # Extracted signals & raw documents
-│   │   │   ├── AnalyticsPage.tsx     # Recharts trendlines & category distributions
-│   │   │   └── IngestionJobsPage.tsx # Background job monitor & live logs
-│   │   ├── services/                 # Axios typed API client
-│   │   ├── types/                    # TypeScript interfaces
-│   │   ├── App.tsx                   # React Router & QueryClientProvider
-│   │   └── index.css                 # Cyber-intelligence theme
-│   ├── package.json
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   └── Dockerfile
-│
-├── docker-compose.yml
-├── .env.example
-└── docs/
-    ├── ARCHITECTURE.md
-    ├── IMPLEMENTATION_PLAN.md
-    ├── API_CONTRACT.md
-    └── DATABASE_SCHEMA.md
-```
+1. **Evidence before assumptions.** Every opportunity traces to real signals.
+2. **Patterns before recommendations.** Find the problem, then rank it.
+3. **Transparent scoring.** Criteria are understandable and testable.
+4. **Reliable data.** Data quality decides insight quality.
+5. **Explainable outputs.** Users can see why something was surfaced.
+6. **Human validation.** AI supports decisions; it does not prove viability.
+7. **Incremental delivery.** Test each stage before the next depends on it.
 
 ---
 
-## 🛡️ License
+## Security and reliability
 
-MIT License. Built for builders with precision.
+- Use authorized data sources and respect their access policies
+- Keep credentials in environment variables or a secrets manager
+- Validate and normalize all external data before processing
+- Apply request validation, access controls, and sensible CORS settings
+- Handle rate limits, failures, and unavailable sources safely
+- Never present unsupported AI-generated claims as verified evidence
+- Test scoring and clustering on representative datasets
+
+---
+
+## Documentation
+
+- `README.md`: overview, architecture, setup
+- `openapi.yaml`: API contract *(if maintained)*
+- `PRD.md`: requirements and acceptance criteria
+- Architecture docs: component responsibilities and data flow
+- Database migrations: authoritative schema history
+- Test docs: validation procedures
+
+---
+
+<div align="center">
+
+**GreatScout. Scout Smart, Build Better.**
+
+Turn market signals into patterns, evidence-backed opportunities, and better product decisions.
+
+</div>
