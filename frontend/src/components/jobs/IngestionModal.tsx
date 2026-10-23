@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Sparkles, CheckCircle2, AlertCircle, Database, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { jobsService } from '../../services/jobsService';
 import { Button } from '../common/Button';
 import { Badge } from '../common/Badge';
@@ -15,6 +16,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const navigate = useNavigate();
   const [sourceCode, setSourceCode] = useState('demo');
   const [category, setCategory] = useState('all');
   const [limit, setLimit] = useState(50);
@@ -48,40 +50,42 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white border border-[#dbe7e7] rounded-[24px] max-w-lg w-full p-6 sm:p-8 shadow-2xl relative font-outfit">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 text-[#55696e] hover:text-[#1f2a2e] p-1.5 rounded-full hover:bg-[#eaf3f3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+        <div className="flex items-center gap-3.5 mb-6">
+          <div className="w-11 h-11 rounded-full bg-[#0e6670] flex items-center justify-center text-white shadow-sm shrink-0">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-100">Run GreatScout Pipeline</h2>
-            <p className="text-xs text-slate-400">
-              Ingest raw user discussions and discover market opportunities
+            <h2 className="text-xl font-bold text-[#1f2a2e] tracking-tight">
+              Run GreatScout <span className="text-[#0e6670]">Pipeline</span>
+            </h2>
+            <p className="text-xs text-[#55696e] mt-0.5">
+              Ingest raw user discussions and synthesize evidence-backed opportunities
             </p>
           </div>
         </div>
 
         {result ? (
           <div className="space-y-4 py-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto">
-              <CheckCircle2 className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-full bg-[#eaf3f3] border border-[#dbe7e7] flex items-center justify-center text-[#0e6670] mx-auto shadow-sm">
+              <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold text-slate-100">Job Queued Successfully!</h3>
-            <p className="text-xs text-slate-400 max-w-xs mx-auto">
+            <h3 className="text-lg font-bold text-[#1f2a2e]">Pipeline Triggered Successfully</h3>
+            <p className="text-xs sm:text-sm text-[#55696e] max-w-xs mx-auto">
               {result.message}
             </p>
-            <div className="p-3 bg-slate-950 rounded-lg text-xs font-mono text-emerald-400 border border-slate-800">
+            <div className="p-3 bg-[#f4f8f8] rounded-xl text-xs font-mono text-[#0e6670] border border-[#dbe7e7]">
               Job ID: {result.job_id}
             </div>
-            <div className="flex justify-center gap-3 pt-2">
+            <div className="flex justify-center gap-3 pt-3">
               <Button variant="secondary" size="sm" onClick={onClose}>
                 Close
               </Button>
@@ -90,7 +94,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                 size="sm"
                 onClick={() => {
                   onClose();
-                  window.location.href = '/jobs';
+                  navigate('/app/jobs');
                 }}
                 icon={<ArrowRight className="w-3.5 h-3.5" />}
               >
@@ -101,21 +105,21 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-[#fdf2f2] border border-[#f8cfcb] text-[#b3261e] text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-2 uppercase tracking-[0.08em]">
                 Select Data Source
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 {[
                   { id: 'demo', label: 'Synthetic Demo', badge: 'Zero Setup', desc: 'Curated friction' },
                   { id: 'product_hunt', label: 'Product Hunt', badge: 'Live API', desc: 'Discussions' },
-                  { id: 'reddit', label: 'Reddit', badge: 'Live PRAW', desc: 'r/SaaS & r/startups' },
+                  { id: 'reddit', label: 'Reddit', badge: 'Live PRAW', desc: 'r/SaaS rants' },
                 ].map((s) => (
                   <button
                     key={s.id}
@@ -123,12 +127,12 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                     onClick={() => setSourceCode(s.id)}
                     className={`p-3 rounded-xl border text-left transition-all ${
                       sourceCode === s.id
-                        ? 'bg-emerald-950/40 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/50'
-                        : 'bg-slate-950/40 border-slate-800 hover:border-slate-700 text-slate-400'
+                        ? 'bg-[#eaf3f3] border-[#0e6670] shadow-sm ring-1 ring-[#0e6670]'
+                        : 'bg-[#f4f8f8] border-[#dbe7e7] hover:border-[#0e6670] text-[#55696e]'
                     }`}
                   >
-                    <div className="text-xs font-bold text-slate-200">{s.label}</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">{s.desc}</div>
+                    <div className="text-xs font-bold text-[#1f2a2e]">{s.label}</div>
+                    <div className="text-[10px] text-[#55696e] mt-0.5">{s.desc}</div>
                     <Badge variant={sourceCode === s.id ? 'emerald' : 'slate'} size="sm" className="mt-2 text-[9px] px-1.5 py-0">
                       {s.badge}
                     </Badge>
@@ -138,13 +142,13 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
                 Domain / Software Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500/60"
+                className="w-full bg-[#f4f8f8] border border-[#dbe7e7] rounded-xl px-3.5 py-2.5 text-sm text-[#1f2a2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
               >
                 <option value="all">All Domains (Cross-industry discovery)</option>
                 <option value="Developer Tools">Developer Tools & Infrastructure</option>
@@ -157,7 +161,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+                <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
                   Document Batch Limit
                 </label>
                 <input
@@ -166,27 +170,27 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                   max="200"
                   value={limit}
                   onChange={(e) => setLimit(parseInt(e.target.value) || 20)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500/60"
+                  className="w-full bg-[#f4f8f8] border border-[#dbe7e7] rounded-xl px-3.5 py-2 text-sm text-[#1f2a2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+                <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
                   Full Pipeline
                 </label>
-                <label className="flex items-center gap-2 mt-2 cursor-pointer text-xs text-slate-300">
+                <label className="flex items-center gap-2 mt-2.5 cursor-pointer text-xs text-[#1f2a2e]">
                   <input
                     type="checkbox"
                     checked={runPipeline}
                     onChange={(e) => setRunPipeline(e.target.checked)}
-                    className="rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-400"
+                    className="w-4 h-4 rounded border-[#dbe7e7] text-[#0e6670] focus:ring-[#0e6670]"
                   />
                   <span>Auto-cluster & score</span>
                 </label>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-800 flex justify-end gap-3">
+            <div className="pt-4 border-t border-[#dbe7e7] flex justify-end gap-3">
               <Button variant="ghost" size="sm" type="button" onClick={onClose}>
                 Cancel
               </Button>
@@ -195,7 +199,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                 size="sm"
                 type="submit"
                 loading={loading}
-                icon={<Database className="w-3.5 h-3.5" />}
+                icon={<Database className="w-3.5 h-3.5 text-white mr-1" />}
               >
                 Launch Pipeline
               </Button>

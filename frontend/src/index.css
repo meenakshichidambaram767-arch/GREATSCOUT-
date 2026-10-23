@@ -3,19 +3,40 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  --gs-bg: #f4f8f8;
+  --gs-surface: #ffffff;
+  --gs-border: #dbe7e7;
+  --gs-grid: #e3eded;
+  --gs-teal: #0e6670;
+  --gs-teal-hover: #0a4e56;
+  --gs-teal-subtle: #eaf3f3;
+  --gs-text: #1f2a2e;
+  --gs-text-muted: #55696e;
+  --gs-black: #0b0f10;
+  --gs-amber: #d98a00;
+  --gs-red: #b3261e;
+  color-scheme: light;
 }
 
 html, body {
   margin: 0;
-  background-color: #090d16;
-  color: #f1f5f9;
+  background-color: #f4f8f8;
+  color: #1f2a2e;
   font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
 }
 
 *, button, input, select, textarea {
   font-family: inherit;
+}
+
+/* Subtle 40px x 40px grid */
+.bg-subtle-grid {
+  background-color: #f4f8f8;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, #e3eded 1px, transparent 1px),
+    linear-gradient(to bottom, #e3eded 1px, transparent 1px);
 }
 
 /* Custom scrollbars */
@@ -25,66 +46,80 @@ html, body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #f4f8f8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #dbe7e7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #0e6670;
 }
 
-/* Glassmorphism surfaces */
+/* Clean surfaces */
+.gs-card {
+  background: #ffffff;
+  border: 1px solid #dbe7e7;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px -2px rgba(14, 102, 112, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gs-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: #0e6670;
+  box-shadow: 0 12px 28px -4px rgba(14, 102, 112, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Glassmorphism legacy fallback to clean white surface */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #dbe7e7;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px -2px rgba(14, 102, 112, 0.04);
 }
 
 .glass-panel-hover {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
   transform: translateY(-2px);
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15);
+  border-color: #0e6670;
+  box-shadow: 0 12px 28px -4px rgba(14, 102, 112, 0.12);
 }
 
-/* Badge glows */
-.glow-emerald {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+/* Interactive focus ring */
+.gs-focus-ring:focus-visible {
+  outline: 2px solid #0e6670;
+  outline-offset: 2px;
 }
 
-.glow-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
-}
-
-.glow-amber {
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
-}
-
-.glow-rose {
-  box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+/* Micro-label style */
+.gs-mono-label {
+  font-family: 'JetBrains Mono', 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #55696e;
 }
 
 /* Pulsing radar dot */
 @keyframes radar-pulse {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    box-shadow: 0 0 0 0 rgba(14, 102, 112, 0.6);
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 8px rgba(14, 102, 112, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 0 rgba(14, 102, 112, 0);
   }
 }
 

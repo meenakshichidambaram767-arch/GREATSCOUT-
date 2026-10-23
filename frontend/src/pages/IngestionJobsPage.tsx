@@ -13,10 +13,10 @@ import {
 } from 'lucide-react';
 import { jobsService } from '../services/jobsService';
 import { IngestionJob, Source } from '../types/api';
-import { Card } from '../components/common/Card';
-import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
+import { EmptyState } from '../components/common/EmptyState';
+import { ProgressBar } from '../components/common/ProgressBar';
 import { IngestionModal } from '../components/jobs/IngestionModal';
 
 export const IngestionJobsPage: React.FC = () => {
@@ -30,8 +30,8 @@ export const IngestionJobsPage: React.FC = () => {
     try {
       setLoading(true);
       const [jobsData, sourcesData] = await Promise.all([
-        jobsService.getJobs(),
-        jobsService.getSources(),
+        jobsService.getJobs().catch(() => []),
+        jobsService.getSources().catch(() => []),
       ]);
       setJobs(jobsData);
       setSources(sourcesData);
@@ -54,27 +54,49 @@ export const IngestionJobsPage: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge variant="emerald" size="sm"><CheckCircle2 className="w-3 h-3" /> Completed</Badge>;
+        return (
+          <span className="px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] text-xs font-mono font-semibold flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#0e6670]" /> Completed
+          </span>
+        );
       case 'running':
-        return <Badge variant="cyan" size="sm" glow><Loader2 className="w-3 h-3 animate-spin" /> Running</Badge>;
+        return (
+          <span className="px-3 py-1 rounded-full bg-[#fef7e6] text-[#d98a00] border border-[#fbe1b3] text-xs font-mono font-semibold flex items-center gap-1.5">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d98a00]" /> Running
+          </span>
+        );
       case 'failed':
-        return <Badge variant="rose" size="sm"><XCircle className="w-3 h-3" /> Failed</Badge>;
+        return (
+          <span className="px-3 py-1 rounded-full bg-[#fdf2f2] text-[#b3261e] border border-[#f8cfcb] text-xs font-mono font-semibold flex items-center gap-1.5">
+            <XCircle className="w-3.5 h-3.5 text-[#b3261e]" /> Failed
+          </span>
+        );
       default:
-        return <Badge variant="slate" size="sm"><Clock className="w-3 h-3" /> Pending</Badge>;
+        return (
+          <span className="px-3 py-1 rounded-full bg-[#f4f8f8] text-[#55696e] border border-[#dbe7e7] text-xs font-mono font-semibold flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#55696e]" /> Pending
+          </span>
+        );
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-7 font-outfit">
+      {/* Page Header with Eyebrow and Split Teal Title */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            Ingestion & Processing Jobs
-            <Badge variant="emerald" size="sm">Background Workers</Badge>
+          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] block mb-1">
+            DATA HARVEST // BACKGROUND JOBS
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-outfit font-bold tracking-tight text-[#1f2a2e] flex flex-wrap items-center gap-3">
+            <span>Ingestion &</span>
+            <span className="text-[#0e6670]">Jobs</span>
+            <span className="text-xs px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-mono font-semibold">
+              Background Workers
+            </span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Monitor async crawler tasks, LLM signal extraction, and HDBSCAN clustering jobs.
+          <p className="text-sm text-[#55696e] mt-1.5 max-w-2xl">
+            Monitor asynchronous crawler tasks, natural language signal extraction, and opportunity clustering pipelines.
           </p>
         </div>
 
@@ -91,122 +113,134 @@ export const IngestionJobsPage: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => setModalOpen(true)}
-            icon={<Play className="w-3.5 h-3.5" />}
+            icon={<Play className="w-3.5 h-3.5 text-white mr-1" />}
           >
             Launch Ingestion Job
           </Button>
         </div>
       </div>
 
-      {/* Upstream Sources Overview */}
+      {/* Upstream Sources Overview: White Cards, 18px radius */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {sources.map((s) => (
-          <Card key={s.id} className="border-slate-800 bg-slate-900/40 p-4">
+          <div key={s.id} className="bg-white border border-[#dbe7e7] rounded-[18px] p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-200">{s.name}</span>
-              <Badge variant={s.is_active ? 'emerald' : 'slate'} size="sm">
+              <span className="text-sm font-bold text-[#1f2a2e]">{s.name}</span>
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border ${
+                s.is_active ? 'bg-[#eaf3f3] text-[#0e6670] border-[#dbe7e7]' : 'bg-[#f4f8f8] text-[#55696e] border-[#dbe7e7]'
+              }`}>
                 {s.is_active ? 'Active' : 'Inactive'}
-              </Badge>
+              </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1 font-mono">Code: {s.code}</p>
-          </Card>
+            <p className="text-xs text-[#55696e] mt-2 font-mono">Code: {s.code}</p>
+          </div>
         ))}
       </div>
 
       {/* Jobs Grid and Logs Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Jobs List */}
-        <div className="lg:col-span-2 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
-            Job History & Status ({jobs.length})
-          </h3>
+        <div className="lg:col-span-2 space-y-3.5">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em]">
+              JOB HISTORY & STATUS ({jobs.length})
+            </span>
+          </div>
 
           {loading && jobs.length === 0 ? (
-            <LoadingSkeleton count={3} height="h-24" />
+            <LoadingSkeleton count={3} height="h-28" />
           ) : jobs.length === 0 ? (
-            <Card className="text-center py-10 text-xs text-slate-400">
-              No jobs have been executed yet. Click 'Launch Ingestion Job' to start.
-            </Card>
+            <EmptyState
+              title="No ingestion jobs executed yet"
+              description="Launch your first crawler job to extract friction signals from live community discussions."
+              actionLabel="Launch Ingestion Job"
+              onAction={() => setModalOpen(true)}
+            />
           ) : (
             jobs.map((job) => (
-              <Card
+              <div
                 key={job.id}
-                hoverEffect
                 onClick={() => setSelectedJob(job)}
-                className={`border-slate-800 p-4 cursor-pointer transition-all ${
+                className={`bg-white border rounded-[20px] p-5 cursor-pointer transition-all duration-200 shadow-sm ${
                   selectedJob?.id === job.id
-                    ? 'ring-1 ring-emerald-500/60 bg-slate-900/90'
-                    : 'bg-slate-900/40'
+                    ? 'border-[#0e6670] bg-[#eaf3f3]/40 shadow-md ring-1 ring-[#0e6670]'
+                    : 'border-[#dbe7e7] hover:border-[#0e6670] hover:bg-[#f4f8f8]/60'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-slate-200">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-mono text-xs font-bold text-[#1f2a2e]">
                         {job.job_type.toUpperCase()}
                       </span>
                       {getStatusBadge(job.status)}
                     </div>
-                    <p className="text-[11px] font-mono text-slate-500 truncate max-w-sm">
+                    <p className="text-[11px] font-mono text-[#55696e] truncate max-w-sm">
                       ID: {job.id}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs font-mono shrink-0">
-                    <span className="text-cyan-400 flex items-center gap-1">
+                  <div className="flex items-center gap-3 text-xs font-mono shrink-0">
+                    <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <FileText className="w-3.5 h-3.5" />
                       {job.documents_processed} docs
                     </span>
-                    <span className="text-indigo-400 flex items-center gap-1">
+                    <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <Layers className="w-3.5 h-3.5" />
                       {job.signals_extracted} signals
                     </span>
-                    <span className="text-emerald-400 flex items-center gap-1">
+                    <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <Lightbulb className="w-3.5 h-3.5" />
                       {job.opportunities_generated} opps
                     </span>
                   </div>
                 </div>
 
+                {job.status === 'running' && (
+                  <div className="mt-3 pt-3 border-t border-[#dbe7e7]">
+                    <ProgressBar value={65} color="teal" label="Pipeline Execution in Progress" />
+                  </div>
+                )}
+
                 {job.error_message && (
-                  <div className="mt-2 text-xs text-rose-400 bg-rose-950/40 p-2 rounded border border-rose-900/50">
+                  <div className="mt-3 text-xs text-[#b3261e] bg-[#fdf2f2] p-3 rounded-xl border border-[#f8cfcb]">
                     {job.error_message}
                   </div>
                 )}
-              </Card>
+              </div>
             ))
           )}
         </div>
 
-        {/* Selected Job Execution Logs */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-emerald-400" />
-            Execution Logs
-          </h3>
+        {/* Selected Job Execution Logs: Mono on #f4f8f8 with #dbe7e7 border */}
+        <div className="space-y-3.5">
+          <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-[#0e6670]" />
+            EXECUTION LOGS
+          </span>
 
-          <Card className="border-slate-800 bg-slate-950 font-mono text-xs text-slate-300 p-4 h-96 overflow-y-auto">
+          <div className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-[22px] font-mono text-xs text-[#1f2a2e] p-5 h-96 overflow-y-auto shadow-sm">
             {selectedJob ? (
               <div className="space-y-2">
-                <div className="text-emerald-400 text-[11px] pb-2 border-b border-slate-800">
+                <div className="text-[#0e6670] font-bold text-[11px] pb-2 border-b border-[#dbe7e7]">
                   === Job {selectedJob.id} [{selectedJob.status.toUpperCase()}] ===
                 </div>
                 {selectedJob.logs && selectedJob.logs.length > 0 ? (
                   selectedJob.logs.map((log, i) => (
-                    <div key={i} className="text-slate-400 text-[11px] leading-relaxed">
+                    <div key={i} className="text-[#55696e] text-[11px] leading-relaxed">
                       &gt; {typeof log === 'string' ? log : JSON.stringify(log)}
                     </div>
                   ))
                 ) : (
-                  <div className="text-slate-500 italic text-[11px]">No logs recorded for this job.</div>
+                  <div className="text-[#55696e] italic text-[11px] py-2">No logs recorded for this job.</div>
                 )}
               </div>
             ) : (
-              <div className="text-slate-500 italic text-center py-12">
-                Select a job to view its live execution logs.
+              <div className="text-[#55696e] italic text-center py-16">
+                Select a job from the history to view its live execution logs.
               </div>
             )}
-          </Card>
+          </div>
         </div>
       </div>
 

@@ -13,25 +13,17 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
 }) => {
   const normalized = Math.min(100, Math.max(0, Math.round(score)));
 
-  let colorClass = 'text-emerald-400 stroke-emerald-500';
-  let bgClass = 'stroke-emerald-950/50';
-  let glowClass = 'drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]';
+  let colorClass = 'text-[#0e6670] stroke-[#0e6670]';
   let labelText = 'High Potential';
 
   if (normalized < 60) {
-    colorClass = 'text-rose-400 stroke-rose-500';
-    bgClass = 'stroke-rose-950/50';
-    glowClass = 'drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]';
+    colorClass = 'text-[#b3261e] stroke-[#b3261e]';
     labelText = 'Low Signal';
   } else if (normalized < 75) {
-    colorClass = 'text-amber-400 stroke-amber-500';
-    bgClass = 'stroke-amber-950/50';
-    glowClass = 'drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]';
+    colorClass = 'text-[#d98a00] stroke-[#d98a00]';
     labelText = 'Moderate';
   } else if (normalized < 85) {
-    colorClass = 'text-cyan-400 stroke-cyan-500';
-    bgClass = 'stroke-cyan-950/50';
-    glowClass = 'drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]';
+    colorClass = 'text-[#0e6670] stroke-[#0e6670]';
     labelText = 'Strong';
   }
 
@@ -58,7 +50,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             cx={dimensions.size / 2}
             cy={dimensions.size / 2}
             r={radius}
-            className={bgClass}
+            className="stroke-[#e3eded]"
             strokeWidth={dimensions.stroke}
             fill="transparent"
           />
@@ -67,7 +59,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             cx={dimensions.size / 2}
             cy={dimensions.size / 2}
             r={radius}
-            className={`${colorClass} ${glowClass} transition-all duration-1000 ease-out`}
+            className={`${colorClass} transition-all duration-700 ease-out`}
             strokeWidth={dimensions.stroke}
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
@@ -75,12 +67,12 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             fill="transparent"
           />
         </svg>
-        <span className={`absolute font-bold font-mono ${dimensions.font} ${colorClass}`}>
+        <span className={`absolute font-bold font-mono ${dimensions.font} text-[#1f2a2e]`}>
           {normalized}
         </span>
       </div>
       {showLabel && (
-        <span className={`text-[11px] font-medium tracking-wide mt-1 uppercase ${colorClass}`}>
+        <span className="text-[11px] font-mono tracking-[0.08em] font-semibold mt-1 uppercase text-[#55696e]">
           {labelText}
         </span>
       )}
