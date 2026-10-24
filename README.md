@@ -5,7 +5,7 @@
 ### Evidence-backed product opportunity discovery
 
 **Scout Smart, Build Better.**
-Discover problems. Validate opportunities. Build with evidence.
+Discover problems.Validate opportunities.Build with evidence.
 
 ![Python](https://img.shields.io/badge/Python-FastAPI-3776AB?style=flat-square&logo=python&logoColor=white)
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -16,7 +16,7 @@ Discover problems. Validate opportunities. Build with evidence.
 
 </div>
 
----
+
 
 ## Overview
 
