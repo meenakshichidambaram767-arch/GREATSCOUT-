@@ -13,11 +13,11 @@ import {
 
 const NAV_ITEMS = [
   { name: 'Dashboard', path: '/app', icon: Activity },
-  { name: 'Opportunities', path: '/app/opportunities', icon: Lightbulb },
-  { name: 'Signals & Evidence', path: '/app/signals', icon: Layers },
+  { name: 'Product Ideas', path: '/app/opportunities', icon: Lightbulb },
+  { name: 'Customer Feedback', path: '/app/signals', icon: Layers },
   { name: 'Market Trends', path: '/app/analytics', icon: TrendingUp },
-  { name: 'Ingestion & Jobs', path: '/app/jobs', icon: Database },
-  { name: 'Landing Overview', path: '/', icon: Globe },
+  { name: 'Feedback Scanner', path: '/app/jobs', icon: Database },
+  { name: 'Overview Home', path: '/', icon: Globe },
 ];
 
 export const Sidebar: React.FC = () => {

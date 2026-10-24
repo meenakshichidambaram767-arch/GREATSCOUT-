@@ -65,10 +65,10 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
           </div>
           <div>
             <h2 className="text-xl font-bold text-[#1f2a2e] tracking-tight">
-              Run GreatScout <span className="text-[#0e6670]">Pipeline</span>
+              Scan Customer <span className="text-[#0e6670]">Feedback</span>
             </h2>
             <p className="text-xs text-[#55696e] mt-0.5">
-              Ingest raw user discussions and synthesize evidence-backed opportunities
+              Collect real discussions online, extract customer complaints, and discover new product ideas
             </p>
           </div>
         </div>
@@ -78,12 +78,12 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
             <div className="w-14 h-14 rounded-full bg-[#eaf3f3] border border-[#dbe7e7] flex items-center justify-center text-[#0e6670] mx-auto shadow-sm">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-[#1f2a2e]">Pipeline Triggered Successfully</h3>
+            <h3 className="text-lg font-bold text-[#1f2a2e]">Scan Started Successfully!</h3>
             <p className="text-xs sm:text-sm text-[#55696e] max-w-xs mx-auto">
               {result.message}
             </p>
             <div className="p-3 bg-[#f4f8f8] rounded-xl text-xs font-mono text-[#0e6670] border border-[#dbe7e7]">
-              Job ID: {result.job_id}
+              Scan ID: {result.job_id}
             </div>
             <div className="flex justify-center gap-3 pt-3">
               <Button variant="secondary" size="sm" onClick={onClose}>
@@ -98,7 +98,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                 }}
                 icon={<ArrowRight className="w-3.5 h-3.5" />}
               >
-                View Jobs Monitor
+                View Live Scanner Status
               </Button>
             </div>
           </div>
@@ -113,13 +113,13 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
 
             <div>
               <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-2 uppercase tracking-[0.08em]">
-                Select Data Source
+                Where should we scan for feedback?
               </label>
               <div className="grid grid-cols-3 gap-2.5">
                 {[
-                  { id: 'demo', label: 'Synthetic Demo', badge: 'Zero Setup', desc: 'Curated friction' },
-                  { id: 'product_hunt', label: 'Product Hunt', badge: 'Live API', desc: 'Discussions' },
-                  { id: 'reddit', label: 'Reddit', badge: 'Live PRAW', desc: 'r/SaaS rants' },
+                  { id: 'demo', label: 'Sample Data', badge: 'Fast Demo', desc: 'Curated developer posts' },
+                  { id: 'product_hunt', label: 'Product Hunt', badge: 'Live API', desc: 'Maker launch discussions' },
+                  { id: 'reddit', label: 'Reddit', badge: 'Live Reddit', desc: 'Real user rants & bugs' },
                 ].map((s) => (
                   <button
                     key={s.id}
@@ -143,26 +143,26 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
 
             <div>
               <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
-                Domain / Software Category
+                Target Industry / Software Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full bg-[#f4f8f8] border border-[#dbe7e7] rounded-xl px-3.5 py-2.5 text-sm text-[#1f2a2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
               >
-                <option value="all">All Domains (Cross-industry discovery)</option>
+                <option value="all">All Industries (Scan everything)</option>
                 <option value="Developer Tools">Developer Tools & Infrastructure</option>
-                <option value="SaaS Operations">SaaS Operations & Billing</option>
+                <option value="SaaS Operations">SaaS Operations & Accounting</option>
                 <option value="AI Automation">AI Workflow & LLM Tooling</option>
                 <option value="Remote Work">Remote Team Collaboration</option>
-                <option value="E-Commerce">E-Commerce & Logistics</option>
+                <option value="E-Commerce">E-Commerce & Online Stores</option>
               </select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
-                  Document Batch Limit
+                  How many posts to scan?
                 </label>
                 <input
                   type="number"
@@ -176,7 +176,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
 
               <div>
                 <label className="block text-[11px] font-mono font-semibold text-[#55696e] mb-1.5 uppercase tracking-[0.08em]">
-                  Full Pipeline
+                  Automatic Analysis
                 </label>
                 <label className="flex items-center gap-2 mt-2.5 cursor-pointer text-xs text-[#1f2a2e]">
                   <input
@@ -185,7 +185,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                     onChange={(e) => setRunPipeline(e.target.checked)}
                     className="w-4 h-4 rounded border-[#dbe7e7] text-[#0e6670] focus:ring-[#0e6670]"
                   />
-                  <span>Auto-cluster & score</span>
+                  <span>Create ranked ideas automatically</span>
                 </label>
               </div>
             </div>
@@ -201,7 +201,7 @@ export const IngestionModal: React.FC<IngestionModalProps> = ({
                 loading={loading}
                 icon={<Database className="w-3.5 h-3.5 text-white mr-1" />}
               >
-                Launch Pipeline
+                Start Scan Now
               </Button>
             </div>
           </form>

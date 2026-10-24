@@ -43,22 +43,22 @@ export const AnalyticsPage: React.FC = () => {
   }, [timeframe]);
 
   return (
-    <div className="space-y-7 font-outfit">
+    <div className="space-y-7 font-outfit max-w-7xl mx-auto">
       {/* Page Header with Eyebrow and Split Teal Title */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] block mb-1">
-            LONGITUDINAL TELEMETRY // MARKET DYNAMICS
+          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] bg-[#eaf3f3] px-2.5 py-0.5 rounded-full border border-[#dbe7e7] inline-block mb-1.5">
+            Market Trends & Dynamics
           </span>
           <h1 className="text-3xl sm:text-4xl font-outfit font-bold tracking-tight text-[#1f2a2e] flex flex-wrap items-center gap-3">
             <span>Market</span>
             <span className="text-[#0e6670]">Trends</span>
             <span className="text-xs px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-mono font-semibold">
-              Analytics Suite
+              Trend Analytics
             </span>
           </h1>
-          <p className="text-sm text-[#55696e] mt-1.5 max-w-2xl">
-            Analyze shifts in software complaints, critical urgency spikes, and domain opportunity ratings over time.
+          <p className="text-sm sm:text-base text-[#55696e] mt-1.5 max-w-3xl leading-relaxed">
+            Track how user complaints change over time, see which software industries have the most frustrated customers, and spot where new market demand is spiking.
           </p>
         </div>
 
@@ -74,9 +74,22 @@ export const AnalyticsPage: React.FC = () => {
                   : 'text-[#55696e] hover:text-[#1f2a2e] hover:bg-[#eaf3f3]'
               }`}
             >
-              {t}
+              {t === 'all' ? 'All Time' : t}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Explainer Banner */}
+      <div className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-[20px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#55696e]">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">📈</span>
+          <div>
+            <strong className="text-[#1f2a2e] block sm:inline">How to use trend data: </strong>
+            <span>
+              A sudden spike in complaints or urgent problems in an industry indicates an immediate business opportunity to launch a better alternative tool.
+            </span>
+          </div>
         </div>
       </div>
 
@@ -89,14 +102,14 @@ export const AnalyticsPage: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] block">
-                  TIME SERIES
+                  TIMELINE
                 </span>
                 <h3 className="text-lg font-bold text-[#1f2a2e] flex items-center gap-2 mt-0.5">
                   <Activity className="w-5 h-5 text-[#0e6670]" />
-                  Negative Sentiment & High-Urgency Friction Timeline
+                  Customer Complaints & Urgent Frustrations Over Time
                 </h3>
                 <p className="text-xs text-[#55696e] mt-0.5">
-                  Daily tracking of critical user dissatisfaction spikes across developer and founder communities
+                  Daily tracking of negative user feedback and high-urgency problems across public forums
                 </p>
               </div>
             </div>
@@ -115,7 +128,7 @@ export const AnalyticsPage: React.FC = () => {
                     <Line
                       type="monotone"
                       dataKey="negative_signals"
-                      name="Negative Signals"
+                      name="Negative Customer Signals"
                       stroke="#0e6670"
                       strokeWidth={2.5}
                       dot={{ r: 3, fill: '#0e6670' }}
@@ -123,7 +136,7 @@ export const AnalyticsPage: React.FC = () => {
                     <Line
                       type="monotone"
                       dataKey="critical_urgency"
-                      name="Critical Urgency (Severity 4-5)"
+                      name="Critical Urgency (High Pain)"
                       stroke="#d98a00"
                       strokeWidth={2}
                       dot={{ r: 3, fill: '#d98a00' }}
@@ -133,8 +146,8 @@ export const AnalyticsPage: React.FC = () => {
               ) : (
                 <EmptyState
                   title="No timeline data available for this timeframe"
-                  description="Run an ingestion pipeline to log time-stamped signals."
-                  actionLabel="Run Scout Pipeline"
+                  description="Run a feedback scan to log time-stamped signals."
+                  actionLabel="Run Feedback Scanner"
                   onAction={() => setModalOpen(true)}
                   showGhost={false}
                 />
@@ -147,14 +160,14 @@ export const AnalyticsPage: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] block">
-                  CATEGORY GAP DISTRIBUTION
+                  BY SOFTWARE CATEGORY
                 </span>
                 <h3 className="text-lg font-bold text-[#1f2a2e] flex items-center gap-2 mt-0.5">
                   <BarChart3 className="w-5 h-5 text-[#0e6670]" />
-                  Category Gap Concentration & Score Index
+                  Opportunity Count & Demand by Industry
                 </h3>
                 <p className="text-xs text-[#55696e] mt-0.5">
-                  Comparing opportunity volume and average score ratings across software verticals
+                  Comparing how many viable business ideas exist across different categories, alongside their average ratings
                 </p>
               </div>
             </div>
@@ -177,8 +190,8 @@ export const AnalyticsPage: React.FC = () => {
               ) : (
                 <EmptyState
                   title="No category breakdown data available"
-                  description="Run an ingestion pipeline to populate category scores."
-                  actionLabel="Run Scout Pipeline"
+                  description="Run a feedback scan to populate category scores."
+                  actionLabel="Run Feedback Scanner"
                   onAction={() => setModalOpen(true)}
                   showGhost={false}
                 />

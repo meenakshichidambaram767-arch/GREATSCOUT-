@@ -68,23 +68,36 @@ export const OpportunitiesPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-7 font-outfit">
+    <div className="space-y-7 font-outfit max-w-7xl mx-auto">
       {/* Page Header with Eyebrow and Split Teal Title */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] block mb-1">
-            COMMERCIAL DOSSIERS // 7-PILLAR EVALUATION
+          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] bg-[#eaf3f3] px-2.5 py-0.5 rounded-full border border-[#dbe7e7] inline-block mb-1.5">
+            Ranked Business Ideas
           </span>
           <h1 className="text-3xl sm:text-4xl font-outfit font-bold tracking-tight text-[#1f2a2e] flex flex-wrap items-center gap-3">
-            <span>Discovered</span>
-            <span className="text-[#0e6670]">Opportunities</span>
+            <span>Product Ideas</span>
+            <span className="text-[#0e6670]">Catalog</span>
             <span className="text-xs px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-mono font-semibold">
-              {total} Gaps Found
+              {total} Ideas Discovered
             </span>
           </h1>
-          <p className="text-sm text-[#55696e] mt-1.5 max-w-2xl">
-            Real recurring user pain points distilled into actionable, evidence-backed product theses.
+          <p className="text-sm sm:text-base text-[#55696e] mt-1.5 max-w-3xl leading-relaxed">
+            Every product opportunity below was created by analyzing recurring complaints people shared on Reddit and Product Hunt. Click any idea to see the problem thesis and real customer quotes.
           </p>
+        </div>
+      </div>
+
+      {/* Helpful Explainer Banner */}
+      <div className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-[20px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#55696e]">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">💡</span>
+          <div>
+            <strong className="text-[#1f2a2e] block sm:inline">What does the Idea Score mean? </strong>
+            <span>
+              Scores out of 100 measure customer demand, problem urgency, and willingness to pay. A score above 70 indicates a high-potential business opportunity.
+            </span>
+          </div>
         </div>
       </div>
 
@@ -95,7 +108,7 @@ export const OpportunitiesPage: React.FC = () => {
             <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-[#55696e]" />
             <input
               type="text"
-              placeholder="Search opportunity title, problem thesis, or target audience..."
+              placeholder="Search by problem keyword, industry, or target audience (e.g., Shopify, accounting, API)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#f4f8f8] border border-[#dbe7e7] rounded-full pl-10 pr-4 py-2.5 text-sm text-[#1f2a2e] placeholder-[#55696e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
@@ -126,10 +139,10 @@ export const OpportunitiesPage: React.FC = () => {
               }}
               className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-full px-4 py-2.5 text-xs text-[#1f2a2e] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e6670]"
             >
-              <option value="overall_score">Sort: Highest Overall Score</option>
-              <option value="demand_score">Sort: Highest Demand Volume</option>
-              <option value="pain_intensity_score">Sort: Most Critical Pain</option>
-              <option value="willingness_to_pay_score">Sort: Highest Willingness-to-Pay</option>
+              <option value="overall_score">Sort: Highest Overall Rating</option>
+              <option value="demand_score">Sort: Most Frequently Requested</option>
+              <option value="pain_intensity_score">Sort: Most Frustrated Users</option>
+              <option value="willingness_to_pay_score">Sort: Highest Willingness to Pay</option>
               <option value="created_at">Sort: Newest First</option>
             </select>
 
@@ -162,13 +175,13 @@ export const OpportunitiesPage: React.FC = () => {
         </form>
       </Card>
 
-      {/* Opportunities Grid: 20-24px radius, white cards, score as teal badge, evidence count chip, black primary View button */}
+      {/* Opportunities Grid: 20-24px radius, white cards, score as teal badge, evidence count chip */}
       {loading ? (
         <LoadingSkeleton count={4} height="h-48" />
       ) : opportunities.length === 0 ? (
         <EmptyState
-          title="No matching market opportunities"
-          description="Try adjusting search keywords, resetting category filters, or launching an ingestion run."
+          title="No matching product ideas found"
+          description="Try adjusting your search terms or clearing your category filters."
           actionLabel="Reset Search & Filters"
           onAction={() => {
             setSearch('');
@@ -182,7 +195,7 @@ export const OpportunitiesPage: React.FC = () => {
           {opportunities.map((opp) => (
             <div 
               key={opp.id} 
-              className="bg-white border border-[#dbe7e7] rounded-[22px] p-6 shadow-sm hover:border-[#0e6670] hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+              className="bg-white border border-[#dbe7e7] rounded-[22px] p-6 shadow-sm hover:border-[#0e6670] hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-start justify-between gap-4 mb-3">
@@ -191,31 +204,36 @@ export const OpportunitiesPage: React.FC = () => {
                       {opp.category}
                     </span>
                     <span className="px-2.5 py-0.5 rounded-full bg-[#f4f8f8] text-[#55696e] text-[11px] font-mono border border-[#dbe7e7]">
-                      {opp.target_audience}
+                      Target: {opp.target_audience}
                     </span>
                   </div>
                   <ScoreGauge score={opp.scores.overall_score} size="sm" />
                 </div>
 
-                <h3 className="text-lg font-bold text-[#1f2a2e] hover:text-[#0e6670] transition-colors leading-snug">
+                <h3 className="text-lg font-bold text-[#1f2a2e] group-hover:text-[#0e6670] transition-colors leading-snug">
                   {opp.title}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-[#55696e] mt-2 line-clamp-3 leading-relaxed">
-                  {opp.problem_thesis}
-                </p>
+                <div className="mt-3 bg-[#f8fafb] rounded-[14px] p-3.5 border border-[#eaf0f0]">
+                  <span className="text-[11px] font-mono uppercase font-bold text-[#55696e] tracking-wider block mb-1">
+                    The Problem People Face:
+                  </span>
+                  <p className="text-xs sm:text-sm text-[#3b4d52] line-clamp-3 leading-relaxed">
+                    {opp.problem_thesis}
+                  </p>
+                </div>
               </div>
 
               <div className="mt-5 pt-4 border-t border-[#dbe7e7] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-semibold flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-[#0e6670]" />
-                    {opp.signal_count} Verified Signals
+                    {opp.signal_count} Customer Quotes
                   </span>
                 </div>
                 <Link to={`/app/opportunities/${opp.id}`}>
                   <Button variant="primary" size="sm" showArrow={true}>
-                    View
+                    View Details & Quotes
                   </Button>
                 </Link>
               </div>

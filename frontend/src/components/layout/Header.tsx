@@ -33,11 +33,11 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
       {/* Title & Slogan */}
       <div className="flex items-center gap-3">
         <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.08em] text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7]">
-          PRODUCT INTELLIGENCE OS
+          Market Research & Discovery
         </span>
         <span className="text-[#dbe7e7] hidden sm:inline">|</span>
         <span className="text-xs text-[#55696e] hidden sm:inline font-outfit">
-          Analyzing Product Hunt discussions & Reddit rants
+          Turning real customer complaints into proven business ideas
         </span>
       </div>
 

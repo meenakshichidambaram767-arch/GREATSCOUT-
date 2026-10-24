@@ -87,7 +87,7 @@ export const OpportunityDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-7 font-outfit">
+    <div className="space-y-7 font-outfit max-w-7xl mx-auto">
       {/* Back Navigation & Status Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Link
@@ -95,7 +95,7 @@ export const OpportunityDetailPage: React.FC = () => {
           className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-[#55696e] hover:text-[#0e6670] transition-colors uppercase tracking-[0.08em]"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Opportunities Catalog</span>
+          <span>Back to Product Ideas Catalog</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -107,12 +107,12 @@ export const OpportunityDetailPage: React.FC = () => {
             showArrow={false}
             icon={<Star className={`w-3.5 h-3.5 ${opportunity.status === 'starred' ? 'fill-current' : ''}`} />}
           >
-            {opportunity.status === 'starred' ? 'Starred Opportunity' : 'Star Opportunity'}
+            {opportunity.status === 'starred' ? 'Saved to Starred' : 'Save Idea (Star)'}
           </Button>
         </div>
       </div>
 
-      {/* Main Dossier Header Card: White Surface, #dbe7e7 borders */}
+      {/* Main Idea Overview Card */}
       <div className="bg-white border border-[#dbe7e7] rounded-[24px] p-6 md:p-8 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div className="flex-1 space-y-3.5">
@@ -121,7 +121,7 @@ export const OpportunityDetailPage: React.FC = () => {
                 {opportunity.category}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#f4f8f8] text-[#55696e] text-xs font-mono border border-[#dbe7e7]">
-                ICP: {opportunity.target_audience}
+                Target Audience: {opportunity.target_audience}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] text-xs font-mono font-semibold border border-[#dbe7e7]">
                 Confidence: {opportunity.confidence_level.toUpperCase()}
@@ -133,55 +133,56 @@ export const OpportunityDetailPage: React.FC = () => {
             </h1>
 
             <div className="text-sm text-[#1f2a2e] leading-relaxed pt-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] mb-1 text-[#0e6670]">
-                Core Problem Thesis
+              <span className="font-mono text-xs font-semibold uppercase tracking-[0.08em] block mb-1 text-[#0e6670]">
+                The Core Problem People Face:
+              </span>
+              <p className="text-base text-[#1f2a2e] leading-relaxed bg-[#f8fafb] p-4 rounded-[16px] border border-[#eaf0f0]">
+                {opportunity.problem_thesis}
               </p>
-              <p className="text-base text-[#1f2a2e] leading-relaxed">{opportunity.problem_thesis}</p>
             </div>
           </div>
 
           {/* Large Overall Score Gauge */}
-          <div className="flex flex-col items-center justify-center p-6 bg-[#f4f8f8] rounded-[20px] border border-[#dbe7e7] shrink-0 min-w-[200px]">
+          <div className="flex flex-col items-center justify-center p-6 bg-[#f4f8f8] rounded-[20px] border border-[#dbe7e7] shrink-0 min-w-[220px]">
             <ScoreGauge score={opportunity.scores.overall_score} size="lg" />
             <div className="mt-3 text-center">
-              <span className="text-xs font-mono font-semibold text-[#1f2a2e]">
-                Composite Gap Score
+              <span className="text-xs font-mono font-bold text-[#1f2a2e] block">
+                Commercial Potential
               </span>
-              <p className="text-[10px] text-[#55696e] mt-0.5">Weighted Multi-Factor Metric</p>
+              <p className="text-[11px] text-[#55696e] mt-0.5">
+                {opportunity.scores.overall_score >= 80 ? '🌟 Very High Demand' : opportunity.scores.overall_score >= 70 ? '🔥 Strong Market Demand' : '⚡ Promising Opportunity'}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* 7 Pillars Scoring Framework */}
+        {/* Scoring Breakdown with Clear Explanations */}
         <div className="mt-8 pt-6 border-t border-[#dbe7e7] space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] block">
-                SCIENTIFIC EVALUATION
+                EVALUATION BREAKDOWN
               </span>
-              <h2 className="text-base font-bold text-[#1f2a2e] flex items-center gap-2">
-                <span>Multi-Factor Opportunity Scoring Matrix</span>
-                <Badge variant="emerald" size="sm">7 Pillars</Badge>
-                {opportunity.scores.metadata?.model_version && (
-                  <span className="text-[10px] font-mono text-[#55696e] bg-[#f4f8f8] px-2 py-0.5 rounded-full border border-[#dbe7e7]">
-                    v{opportunity.scores.metadata.model_version}
-                  </span>
-                )}
+              <h2 className="text-base sm:text-lg font-bold text-[#1f2a2e] flex items-center gap-2">
+                <span>How This Opportunity Was Scored</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#eaf3f3] text-[#0e6670] font-mono border border-[#dbe7e7]">
+                  7 Factors
+                </span>
               </h2>
-              <p className="text-xs text-[#55696e] mt-0.5">
-                Empirical signals (85% aggregate weight) rigorously separated from heuristic estimates (15%).
+              <p className="text-xs text-[#55696e] mt-1 leading-relaxed">
+                We combine real evidence from customer quotes (85% of score) with technical feasibility estimates (15%).
               </p>
             </div>
           </div>
 
-          {/* Group 1: Measured Empirical Evidence Metrics (85%) */}
+          {/* Group 1: Measured Evidence (85%) */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#0e6670] font-mono">
-                1. Empirical Evidence Metrics
+                1. Customer Demand & Evidence (85% of Score)
               </span>
               <span className="text-[10px] font-mono bg-[#eaf3f3] text-[#0e6670] px-2 py-0.5 rounded-full border border-[#dbe7e7]">
-                85% Aggregate Weight • Derived directly from verified citations
+                Calculated from real discussions
               </span>
             </div>
 
@@ -197,7 +198,7 @@ export const OpportunityDetailPage: React.FC = () => {
                   </div>
                   <ProgressBar value={opportunity.scores.demand_score} color="teal" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Recurrence across verified threads</p>
+                <p className="text-[11px] text-[#55696e] mt-2">How frequently users mention this problem</p>
               </div>
 
               <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7] flex flex-col justify-between">
@@ -205,13 +206,13 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <ShieldAlert className="w-3.5 h-3.5 text-[#b3261e] shrink-0" />
-                      Pain Intensity
+                      Frustration Level
                     </span>
                     <span className="text-[10px] font-mono text-[#b3261e] bg-[#fdf2f2] px-1.5 py-0.5 rounded-full font-bold">25%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.pain_intensity_score} color="rose" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Severity & disruption level</p>
+                <p className="text-[11px] text-[#55696e] mt-2">How painful & disruptive the issue is</p>
               </div>
 
               <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7] flex flex-col justify-between">
@@ -219,13 +220,13 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <FileCheck className="w-3.5 h-3.5 text-[#0e6670] shrink-0" />
-                      Evidence Quality
+                      Evidence Depth
                     </span>
                     <span className="text-[10px] font-mono text-[#0e6670] bg-[#eaf3f3] px-1.5 py-0.5 rounded-full font-bold">15%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.evidence_strength_score ?? 75} color="teal" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Corroboration density & quotes</p>
+                <p className="text-[11px] text-[#55696e] mt-2">Quality and detail of customer quotes</p>
               </div>
 
               <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7] flex flex-col justify-between">
@@ -233,13 +234,13 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <DollarSign className="w-3.5 h-3.5 text-[#0e6670] shrink-0" />
-                      Willingness-to-Pay
+                      Willingness to Pay
                     </span>
                     <span className="text-[10px] font-mono text-[#0e6670] bg-[#eaf3f3] px-1.5 py-0.5 rounded-full font-bold">15%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.willingness_to_pay_score} color="teal" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Commercial intent & budget cues</p>
+                <p className="text-[11px] text-[#55696e] mt-2">Signs that users actively seek paid solutions</p>
               </div>
 
               <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7] flex flex-col justify-between">
@@ -247,25 +248,25 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <Compass className="w-3.5 h-3.5 text-[#d98a00] shrink-0" />
-                      Competitive Vacuum
+                      Market Void
                     </span>
                     <span className="text-[10px] font-mono text-[#d98a00] bg-[#fef7e6] px-1.5 py-0.5 rounded-full font-bold">10%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.competitive_vacuum_score} color="amber" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Deficiency of existing tools</p>
+                <p className="text-[11px] text-[#55696e] mt-2">Lack of good existing tools today</p>
               </div>
             </div>
           </div>
 
-          {/* Group 2: Heuristic & Temporal Estimates (15%) */}
+          {/* Group 2: Practical Estimates (15%) */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#d98a00] font-mono">
-                2. Heuristic & Temporal Factors
+                2. Practical Feasibility Estimates (15% of Score)
               </span>
               <span className="text-[10px] font-mono bg-[#fef7e6] text-[#d98a00] px-2 py-0.5 rounded-full border border-[#fbe1b3]">
-                15% Aggregate Weight • Flagged clearly as estimates
+                Practical execution factors
               </span>
             </div>
 
@@ -275,16 +276,13 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <Wrench className="w-3.5 h-3.5 text-[#d98a00] shrink-0" />
-                      Technical Feasibility
+                      Ease of Building (Feasibility)
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-mono text-[#d98a00] bg-[#fef7e6] px-1.5 py-0.5 rounded-full font-bold">5%</span>
-                      <span className="text-[9px] font-mono text-[#55696e] bg-white border border-[#dbe7e7] px-1.5 py-0.5 rounded-full">Heuristic</span>
-                    </div>
+                    <span className="text-[10px] font-mono text-[#d98a00] bg-[#fef7e6] px-1.5 py-0.5 rounded-full font-bold">10%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.feasibility_score ?? 85} color="amber" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Implementation complexity estimation</p>
+                <p className="text-[11px] text-[#55696e] mt-2">How realistic this is to build with modern tech</p>
               </div>
 
               <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7] flex flex-col justify-between">
@@ -292,16 +290,13 @@ export const OpportunityDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#0e6670] shrink-0" />
-                      Evidence Recency
+                      Feedback Freshness
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-mono text-[#0e6670] bg-[#eaf3f3] px-1.5 py-0.5 rounded-full font-bold">5%</span>
-                      <span className="text-[9px] font-mono text-[#55696e] bg-white border border-[#dbe7e7] px-1.5 py-0.5 rounded-full">Decay Model</span>
-                    </div>
+                    <span className="text-[10px] font-mono text-[#0e6670] bg-[#eaf3f3] px-1.5 py-0.5 rounded-full font-bold">5%</span>
                   </div>
                   <ProgressBar value={opportunity.scores.recency_score ?? 85} color="teal" />
                 </div>
-                <p className="text-[11px] text-[#55696e] mt-2">Temporal relevance decay factor</p>
+                <p className="text-[11px] text-[#55696e] mt-2">How recent the customer complaints are</p>
               </div>
             </div>
           </div>
@@ -311,7 +306,7 @@ export const OpportunityDetailPage: React.FC = () => {
             <div className="p-4 rounded-[16px] bg-[#f4f8f8] border border-[#dbe7e7]">
               <h3 className="text-xs font-semibold text-[#1f2a2e] flex items-center gap-2 mb-2 font-mono uppercase tracking-[0.08em]">
                 <Info className="w-3.5 h-3.5 text-[#0e6670]" />
-                Scoring Model Rationale & Drivers
+                Key Drivers Behind This Score
               </h3>
               <ul className="space-y-1.5">
                 {opportunity.scores.metadata.explanations.map((exp, i) => (
@@ -331,7 +326,7 @@ export const OpportunityDetailPage: React.FC = () => {
         <div className="bg-white border border-[#dbe7e7] rounded-[22px] p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-3 text-[#b3261e]">
             <AlertCircle className="w-5 h-5" />
-            <h3 className="text-base font-bold text-[#1f2a2e]">Why Current Solutions Fail</h3>
+            <h3 className="text-base font-bold text-[#1f2a2e]">Why Existing Solutions Fall Short</h3>
           </div>
           <p className="text-sm text-[#55696e] leading-relaxed">
             {opportunity.why_current_solutions_fail}
@@ -349,22 +344,22 @@ export const OpportunityDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Traceability Graph: Evidence Citations */}
+      {/* Real Customer Quotes */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] block">
-              PRIMARY EVIDENCE
+              Customer Proof
             </span>
             <h2 className="text-xl font-bold text-[#1f2a2e] flex items-center gap-2.5">
               <Quote className="w-4 h-4 text-[#0e6670]" />
-              <span>Traceable User Evidence Citations</span>
+              <span>Real Customer Quotes Supporting This Idea</span>
               <span className="px-2.5 py-0.5 rounded-full bg-[#eaf3f3] text-[#0e6670] text-xs font-mono font-semibold border border-[#dbe7e7]">
                 {opportunity.evidence.length} Quotes
               </span>
             </h2>
-            <p className="text-xs text-[#55696e] mt-0.5">
-              Direct verbatim quotes from real discussions that anchor this opportunity.
+            <p className="text-xs sm:text-sm text-[#55696e] mt-0.5">
+              Exact verbatim quotes from real online threads that prove people face this problem every day.
             </p>
           </div>
         </div>

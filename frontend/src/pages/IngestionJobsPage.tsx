@@ -81,22 +81,22 @@ export const IngestionJobsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-7 font-outfit">
+    <div className="space-y-7 font-outfit max-w-7xl mx-auto">
       {/* Page Header with Eyebrow and Split Teal Title */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] block mb-1">
-            DATA HARVEST // BACKGROUND JOBS
+          <span className="font-mono text-[11px] font-semibold tracking-[0.08em] uppercase text-[#0e6670] bg-[#eaf3f3] px-2.5 py-0.5 rounded-full border border-[#dbe7e7] inline-block mb-1.5">
+            Automated Scanner & Feeds
           </span>
           <h1 className="text-3xl sm:text-4xl font-outfit font-bold tracking-tight text-[#1f2a2e] flex flex-wrap items-center gap-3">
-            <span>Ingestion &</span>
-            <span className="text-[#0e6670]">Jobs</span>
+            <span>Feedback</span>
+            <span className="text-[#0e6670]">Scanner</span>
             <span className="text-xs px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-mono font-semibold">
-              Background Workers
+              Automated Pipeline
             </span>
           </h1>
-          <p className="text-sm text-[#55696e] mt-1.5 max-w-2xl">
-            Monitor asynchronous crawler tasks, natural language signal extraction, and opportunity clustering pipelines.
+          <p className="text-sm sm:text-base text-[#55696e] mt-1.5 max-w-3xl leading-relaxed">
+            Run automated scans across Reddit and Product Hunt. The scanner pulls in raw customer discussions, extracts complaints with AI, and groups them into actionable product ideas.
           </p>
         </div>
 
@@ -107,7 +107,7 @@ export const IngestionJobsPage: React.FC = () => {
             onClick={fetchData}
             icon={<RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />}
           >
-            Poll Updates
+            Check Status
           </Button>
           <Button
             variant="primary"
@@ -115,26 +115,48 @@ export const IngestionJobsPage: React.FC = () => {
             onClick={() => setModalOpen(true)}
             icon={<Play className="w-3.5 h-3.5 text-white mr-1" />}
           >
-            Launch Ingestion Job
+            Start New Scan
           </Button>
         </div>
       </div>
 
-      {/* Upstream Sources Overview: White Cards, 18px radius */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {sources.map((s) => (
-          <div key={s.id} className="bg-white border border-[#dbe7e7] rounded-[18px] p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-[#1f2a2e]">{s.name}</span>
-              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border ${
-                s.is_active ? 'bg-[#eaf3f3] text-[#0e6670] border-[#dbe7e7]' : 'bg-[#f4f8f8] text-[#55696e] border-[#dbe7e7]'
-              }`}>
-                {s.is_active ? 'Active' : 'Inactive'}
-              </span>
-            </div>
-            <p className="text-xs text-[#55696e] mt-2 font-mono">Code: {s.code}</p>
+      {/* Explainer Banner */}
+      <div className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-[20px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#55696e]">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">🤖</span>
+          <div>
+            <strong className="text-[#1f2a2e] block sm:inline">What happens during a scan? </strong>
+            <span>
+              1. Scans discussions ➔ 2. AI filters pain points ➔ 3. Groups similar problems ➔ 4. Calculates commercial scores.
+            </span>
           </div>
-        ))}
+        </div>
+      </div>
+
+      {/* Connected Data Sources Overview */}
+      <div>
+        <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] block mb-2">
+          Connected Feedback Sources
+        </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {sources.map((s) => (
+            <div key={s.id} className="bg-white border border-[#dbe7e7] rounded-[18px] p-5 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-[#1f2a2e]">{s.name}</span>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border ${
+                    s.is_active ? 'bg-[#eaf3f3] text-[#0e6670] border-[#dbe7e7]' : 'bg-[#f4f8f8] text-[#55696e] border-[#dbe7e7]'
+                  }`}>
+                    {s.is_active ? '● Connected' : 'Inactive'}
+                  </span>
+                </div>
+                <p className="text-xs text-[#55696e] mt-2">
+                  {s.code === 'demo' ? 'Sample dataset of real developer discussions for instant exploration.' : s.code === 'product_hunt' ? 'Scans maker feedback and product discussions.' : 'Scans Reddit community threads and user complaints.'}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Jobs Grid and Logs Inspector */}
@@ -143,7 +165,7 @@ export const IngestionJobsPage: React.FC = () => {
         <div className="lg:col-span-2 space-y-3.5">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em]">
-              JOB HISTORY & STATUS ({jobs.length})
+              Scan History ({jobs.length})
             </span>
           </div>
 
@@ -151,9 +173,9 @@ export const IngestionJobsPage: React.FC = () => {
             <LoadingSkeleton count={3} height="h-28" />
           ) : jobs.length === 0 ? (
             <EmptyState
-              title="No ingestion jobs executed yet"
-              description="Launch your first crawler job to extract friction signals from live community discussions."
-              actionLabel="Launch Ingestion Job"
+              title="No scans executed yet"
+              description="Start your first feedback scan to gather customer complaints from online discussions."
+              actionLabel="Start New Scan"
               onAction={() => setModalOpen(true)}
             />
           ) : (
@@ -171,34 +193,34 @@ export const IngestionJobsPage: React.FC = () => {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
                       <span className="font-mono text-xs font-bold text-[#1f2a2e]">
-                        {job.job_type.toUpperCase()}
+                        {job.job_type === 'full_pipeline' ? 'Full Feedback Scan' : job.job_type.toUpperCase()}
                       </span>
                       {getStatusBadge(job.status)}
                     </div>
                     <p className="text-[11px] font-mono text-[#55696e] truncate max-w-sm">
-                      ID: {job.id}
+                      Scan ID: {job.id}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-3 text-xs font-mono shrink-0">
                     <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <FileText className="w-3.5 h-3.5" />
-                      {job.documents_processed} docs
+                      {job.documents_processed} posts
                     </span>
                     <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <Layers className="w-3.5 h-3.5" />
-                      {job.signals_extracted} signals
+                      {job.signals_extracted} problems
                     </span>
                     <span className="text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7] flex items-center gap-1 font-semibold">
                       <Lightbulb className="w-3.5 h-3.5" />
-                      {job.opportunities_generated} opps
+                      {job.opportunities_generated} ideas
                     </span>
                   </div>
                 </div>
 
                 {job.status === 'running' && (
                   <div className="mt-3 pt-3 border-t border-[#dbe7e7]">
-                    <ProgressBar value={65} color="teal" label="Pipeline Execution in Progress" />
+                    <ProgressBar value={65} color="teal" label="Scanning online discussions & extracting complaints..." />
                   </div>
                 )}
 
@@ -216,7 +238,7 @@ export const IngestionJobsPage: React.FC = () => {
         <div className="space-y-3.5">
           <span className="font-mono text-[11px] font-semibold text-[#0e6670] uppercase tracking-[0.08em] flex items-center gap-2">
             <Terminal className="w-4 h-4 text-[#0e6670]" />
-            EXECUTION LOGS
+            Live Scanner Activity Log
           </span>
 
           <div className="bg-[#f4f8f8] border border-[#dbe7e7] rounded-[22px] font-mono text-xs text-[#1f2a2e] p-5 h-96 overflow-y-auto shadow-sm">
