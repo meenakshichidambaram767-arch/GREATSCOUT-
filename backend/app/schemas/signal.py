@@ -24,6 +24,9 @@ class SignalResponse(SignalBase):
     id: str
     document_id: str
     cluster_id: Optional[str] = None
+    opportunity_id: Optional[str] = None
+    opportunity_title: Optional[str] = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+

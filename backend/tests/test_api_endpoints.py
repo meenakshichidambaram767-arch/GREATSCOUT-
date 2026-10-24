@@ -83,3 +83,61 @@ async def test_signals_and_documents_endpoints(client):
     doc_res = await client.get("/api/v1/documents?limit=10")
     assert doc_res.status_code == 200
     assert isinstance(doc_res.json(), list)
+
+
+@pytest.mark.asyncio
+async def test_opportunity_prd_endpoints(client, db_session):
+    from backend.app.models.cluster import SignalCluster
+    from backend.app.models.opportunity import Opportunity
+
+    cluster = SignalCluster(
+        label="Dev Webhook Replay",
+        category="Developer Tools",
+        description="Stripe webhook failures",
+        signal_count=5
+    )
+    db_session.add(cluster)
+    await db_session.flush()
+
+    opp = Opportunity(
+        cluster_id=cluster.id,
+        title="Automated Stripe Webhook Dead-Letter Queue & Replay Daemon",
+        target_audience="Backend engineers & DevOps",
+        category="Developer Tools",
+        problem_thesis="Engineers lose critical events when webhooks fail during deployments.",
+        why_current_solutions_fail="Manual retries in Stripe dashboard are slow and error-prone.",
+        suggested_solution="Drop-in edge proxy buffering and replaying failed webhooks automatically.",
+        demand_score=88.0,
+        pain_intensity_score=85.0,
+        willingness_to_pay_score=80.0,
+        competitive_vacuum_score=78.0,
+        overall_score=83.0,
+        confidence_level="high",
+        status="active"
+    )
+    db_session.add(opp)
+    await db_session.commit()
+
+    # 1. Test Single PRD Endpoint
+    prd_res = await client.get(f"/api/v1/opportunities/{opp.id}/prd")
+    assert prd_res.status_code == 200
+    prd_data = prd_res.json()
+    assert prd_data["opportunity_id"] == opp.id
+    assert "tech_stack" in prd_data
+    assert "schema_ddl" in prd_data
+    assert "api_endpoints" in prd_data
+    assert "linear_tickets" in prd_data
+    assert "markdown_content" in prd_data
+    assert len(prd_data["linear_tickets"]) >= 3
+
+    # 2. Test Batch PRD Endpoint
+    batch_res = await client.post(
+        "/api/v1/opportunities/batch-prd",
+        json={"opportunity_ids": [opp.id]}
+    )
+    assert batch_res.status_code == 200
+    batch_data = batch_res.json()
+    assert batch_data["count"] == 1
+    assert len(batch_data["items"]) == 1
+    assert "GreatScout Portfolio Product Blueprint" in batch_data["combined_markdown"]
+

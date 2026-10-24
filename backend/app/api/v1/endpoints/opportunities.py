@@ -263,3 +263,87 @@ async def update_opportunity_status(
         created_at=opp.created_at,
         updated_at=opp.updated_at
     )
+
+
+@router.get("/opportunities/{id}/prd")
+async def get_opportunity_prd(
+    id: str = Path(...),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Zero-to-Code Action Engine:
+    Synthesizes an actionable Product Requirements Document (PRD),
+    tailored Tech Stack Blueprint, Schema DDL, API Contract, and Linear tickets.
+    """
+    from backend.app.services.spec.prd_generator import PRDGenerator
+
+    res = await db.execute(select(Opportunity).where(Opportunity.id == id).options(selectinload(Opportunity.cluster)))
+    opp = res.scalar_one_or_none()
+    if not opp:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+
+    opp_dict = {
+        "id": opp.id,
+        "title": opp.title,
+        "category": opp.category,
+        "target_audience": opp.target_audience,
+        "problem_thesis": opp.problem_thesis,
+        "suggested_solution": opp.suggested_solution,
+        "why_current_solutions_fail": opp.why_current_solutions_fail
+    }
+
+    return PRDGenerator.generate_prd(opp_dict)
+
+
+from pydantic import BaseModel
+from typing import List
+
+class BatchPRDRequest(BaseModel):
+    opportunity_ids: List[str]
+
+
+@router.post("/opportunities/batch-prd")
+async def get_batch_opportunity_prd(
+    request: BatchPRDRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Generate tailored PRDs for multiple opportunities at once,
+    returning a bundle of individual specs and a combined Markdown document.
+    """
+    from backend.app.services.spec.prd_generator import PRDGenerator
+
+    if not request.opportunity_ids:
+        raise HTTPException(status_code=400, detail="No opportunity IDs provided")
+
+    res = await db.execute(
+        select(Opportunity).where(Opportunity.id.in_(request.opportunity_ids))
+    )
+    opps = res.scalars().all()
+    if not opps:
+        raise HTTPException(status_code=404, detail="No matching opportunities found")
+
+    prds = []
+    combined_sections = []
+    for opp in opps:
+        opp_dict = {
+            "id": opp.id,
+            "title": opp.title,
+            "category": opp.category,
+            "target_audience": opp.target_audience,
+            "problem_thesis": opp.problem_thesis,
+            "suggested_solution": opp.suggested_solution,
+            "why_current_solutions_fail": opp.why_current_solutions_fail
+        }
+        prd_data = PRDGenerator.generate_prd(opp_dict)
+        prds.append(prd_data)
+        combined_sections.append(prd_data["markdown_content"])
+
+    combined_doc = "# GreatScout Portfolio Product Blueprint\n\n" + "\n\n---\n\n".join(combined_sections)
+    return {
+        "count": len(prds),
+        "items": prds,
+        "combined_markdown": combined_doc
+    }
+
+

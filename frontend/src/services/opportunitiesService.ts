@@ -28,4 +28,19 @@ export const opportunitiesService = {
     const response = await apiClient.patch<Opportunity>(`/opportunities/${id}`, { status });
     return response.data;
   },
+
+  async getOpportunityPRD(id: string) {
+    const response = await apiClient.get<import('../types/api').OpportunityPRD>(`/opportunities/${id}/prd`);
+    return response.data;
+  },
+
+  async getBatchPRD(opportunityIds: string[]) {
+    const response = await apiClient.post<{
+      count: number;
+      items: import('../types/api').OpportunityPRD[];
+      combined_markdown: string;
+    }>('/opportunities/batch-prd', { opportunity_ids: opportunityIds });
+    return response.data;
+  },
 };
+

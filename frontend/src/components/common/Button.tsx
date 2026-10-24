@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRightIcon } from './Icons';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
@@ -36,7 +36,6 @@ export const Button: React.FC<ButtonProps> = ({
     lg: 'text-base px-6 py-3 min-h-[48px] gap-2.5',
   };
 
-  // Primary buttons feature a small top-right arrow icon unless explicitly disabled
   const shouldRenderArrow = showArrow !== undefined ? showArrow : (variant === 'primary' && !loading);
 
   return (
@@ -46,13 +45,16 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       {loading ? (
-        <Loader2 className="w-4 h-4 animate-spin text-current" />
+        <svg className="w-4 h-4 animate-spin text-current" viewBox="0 0 24 24" fill="none">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
       ) : icon ? (
         <span className="shrink-0">{icon}</span>
       ) : null}
       <span>{children}</span>
       {shouldRenderArrow && !loading && (
-        <ArrowUpRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <ArrowUpRightIcon size={14} className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       )}
     </button>
   );

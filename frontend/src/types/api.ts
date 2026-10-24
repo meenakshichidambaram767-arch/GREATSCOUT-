@@ -196,3 +196,52 @@ export interface SystemHealth {
   ai_provider: string;
   timestamp: string;
 }
+
+export interface TechStackBlueprint {
+  frontend: string;
+  backend: string;
+  database: string;
+  infrastructure: string;
+  integrations: string[];
+  architecture_rationale: string;
+}
+
+export interface MVPScopePhase {
+  phase: string;
+  features: string[];
+}
+
+export interface APIEndpointSpec {
+  method: string;
+  path: string;
+  description: string;
+  request_sample?: string;
+  response_sample?: string;
+}
+
+export interface LinearTicket {
+  identifier: string;
+  title: string;
+  priority: string;
+  estimate: string;
+  label: string;
+  description: string;
+  acceptance_criteria: string[];
+}
+
+export interface OpportunityPRD {
+  opportunity_id: string;
+  title: string;
+  target_audience: string;
+  category: string;
+  problem_thesis: string;
+  suggested_solution: string;
+  tech_stack: TechStackBlueprint;
+  mvp_phases: MVPScopePhase[];
+  edge_cases: string[];
+  schema_ddl: string;
+  api_endpoints: APIEndpointSpec[];
+  linear_tickets: LinearTicket[];
+  markdown_content: string;
+}
+

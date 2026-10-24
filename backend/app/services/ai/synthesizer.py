@@ -51,12 +51,27 @@ class OpportunitySynthesizer:
         signals = cluster.get("signals", [])
         label = cluster.get("label", "Market Problem")
 
+        # Intelligently infer category from cluster label and content if General SaaS
+        label_lower = label.lower()
+        if category == "General SaaS":
+            if any(k in label_lower for k in ["webhook", "lambda", "sentry", "serverless", "api", "cloudwatch"]):
+                category = "Developer Tools"
+            elif any(k in label_lower for k in ["stripe", "wire", "reconcil", "invoice", "accounting", "billing"]):
+                category = "SaaS Operations"
+            elif any(k in label_lower for k in ["llm", "schema", "json", "prompt", "token", "hallucin"]):
+                category = "AI Automation"
+            elif any(k in label_lower for k in ["transcript", "meeting", "slack", "huddle", "jira", "linear"]):
+                category = "Remote Work"
+            elif any(k in label_lower for k in ["shopify", "amazon", "inventory", "ecommerce", "return", "usps"]):
+                category = "E-Commerce"
+
         # Pick appropriate baseline template or customize from cluster signals
         template = cls.CATALOG_TEMPLATES.get(category)
         if not template:
+            clean_title = label.rstrip('.').title()
             template = {
-                "title": f"Next-Gen {label.title()} Solution",
-                "target_audience": f"Modern professionals dealing with {category}",
+                "title": f"{clean_title} Platform",
+                "target_audience": f"Operators and teams dealing with {category}",
                 "problem_thesis": f"Recurring user dissatisfaction centered around {label}.",
                 "why_current_solutions_fail": "Existing market tools are fragmented, overly expensive, or lack workflow-specific automation.",
                 "suggested_solution": f"A targeted workflow tool designed to eliminate manual friction in {label}.",

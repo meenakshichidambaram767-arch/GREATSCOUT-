@@ -23,6 +23,7 @@ import {
   CircularCarousel,
   CrystalizedBall,
 } from '../components/reactbits';
+import { BrandLogo } from '../components/common/BrandLogo';
 
 if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
   gsap.registerPlugin(ScrollTrigger);
@@ -574,18 +575,8 @@ export const CnRLandingPage: React.FC = () => {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#DDDDDD] px-6 sm:px-12 py-4 transition-all">
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-[#16717d] flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
-              <span className="font-outfit font-bold text-base tracking-tighter">GS</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-outfit font-bold text-[22px] tracking-tight text-[#000000]">
-                GreatScout
-              </span>
-              <span className="text-[10px] font-mono tracking-widest text-[#16717d] uppercase font-bold">
-                SCOUT SMART, BUILD BETTER // GSAP MOTION ARCHITECTURE
-              </span>
-            </div>
+          <Link to="/" className="flex items-center gap-3 group focus:outline-none">
+            <BrandLogo size="md" variant="full" />
           </Link>
 
           {/* Navigation Links */}

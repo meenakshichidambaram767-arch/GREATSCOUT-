@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Sparkles } from 'lucide-react';
 import { dashboardService } from '../../services/dashboardService';
 import { SystemHealth } from '../../types/api';
 import { Button } from '../common/Button';
+import { PlayIcon } from '../common/Icons';
 
 export interface HeaderProps {
   onQuickIngest?: () => void;
@@ -29,23 +29,23 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
   const isConnected = health?.status === 'healthy';
 
   return (
-    <header className="h-20 px-6 sm:px-12 bg-white/85 backdrop-blur-md border-b border-[#dbe7e7] flex items-center justify-between sticky top-0 z-20">
-      {/* Title & Slogan */}
+    <header className="h-20 px-6 sm:px-10 bg-white/90 backdrop-blur-md border-b border-[#dbe7e7] flex items-center justify-between sticky top-0 z-20">
+      {/* Title & Context */}
       <div className="flex items-center gap-3">
-        <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.08em] text-[#0e6670] bg-[#eaf3f3] px-2.5 py-1 rounded-full border border-[#dbe7e7]">
-          Market Research & Discovery
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#0e6670] font-mono">
+          Intelligence Workspace
         </span>
-        <span className="text-[#dbe7e7] hidden sm:inline">|</span>
+        <span className="text-[#dbe7e7] hidden sm:inline">•</span>
         <span className="text-xs text-[#55696e] hidden sm:inline font-outfit">
-          Turning real customer complaints into proven business ideas
+          Evidence-backed opportunity discovery and cluster analysis
         </span>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-4">
-        {/* Status Pill: Amber Connecting... or Teal LIVE */}
+      <div className="flex items-center gap-3.5">
+        {/* Status Pill: Subtle and Professional */}
         <div
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono tracking-wide ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono font-medium ${
             isConnected
               ? 'bg-[#eaf3f3] border-[#dbe7e7] text-[#0e6670]'
               : 'bg-[#fef7e6] border-[#fbe1b3] text-[#d98a00]'
@@ -63,20 +63,20 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
               }`}
             />
           </span>
-          <span className="font-semibold text-[11px]">
-            {isConnected ? 'LIVE' : 'Connecting...'}
+          <span className="text-[11px] font-semibold">
+            {isConnected ? 'System Connected' : 'Connecting...'}
           </span>
         </div>
 
-        {/* Primary Action Button: Black pill with top-right arrow */}
+        {/* Primary Action Button */}
         {onQuickIngest && (
           <Button
             variant="primary"
             size="sm"
             onClick={onQuickIngest}
-            icon={<Sparkles className="w-3.5 h-3.5 text-white mr-1" />}
+            icon={<PlayIcon size={13} className="text-white mr-1.5" />}
           >
-            Run Scout Pipeline
+            Trigger Pipeline
           </Button>
         )}
       </div>
