@@ -20,13 +20,13 @@ Discover problems.Validate opportunities.Build with evidence.
 
 ## Overview
 
-Product teams rarely lack feedback. They lack a way to read it. Real user needs are scattered across communities, written in inconsistent language, and buried in thousands of threads no one has time to analyze by hand.
+Product teams rarely lack feedback.They lack a way to read it. Real user needs are scattered across communities, written in inconsistent language, and buried in thousands of threads no one has time to analyze by hand.
 
 **GreatScout turns that noise into ranked, traceable opportunities.** It ingests public discussions, extracts pain points and feature requests, groups similar problems with semantic analysis, scores each cluster on measurable evidence, and shows every insight next to the source records that support it.
 
 > **Evidence → Pattern → Opportunity → Product Insight**
 
-GreatScout does not hand you generic product ideas. It shows you *why* an opportunity matters and *what proves it*.
+GreatScout does not hand you generic product ideas.It shows you *why* an opportunity matters and *what proves it*.
 
 ---
 
