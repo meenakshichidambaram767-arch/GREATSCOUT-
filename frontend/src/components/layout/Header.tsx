@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { dashboardService } from '../../services/dashboardService';
 import { SystemHealth } from '../../types/api';
 import { Button } from '../common/Button';
 import { PlayIcon } from '../common/Icons';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export interface HeaderProps {
   onQuickIngest?: () => void;
@@ -11,6 +13,7 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onQuickIngest, onOpenCopilot }) => {
+  const { user, logout } = useAuth();
   const [health, setHealth] = useState<SystemHealth | null>(null);
 
   const checkHealth = async () => {
@@ -92,6 +95,52 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest, onOpenCopilot }) 
             Run Pipeline
           </Button>
         )}
+
+        {/* User Identity / Profile Pill */}
+        <div className="pl-2 border-l border-[#dbe7e7] flex items-center gap-2">
+          {user ? (
+            <div className="flex items-center gap-2">
+              <div 
+                className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#f4f8f8] border border-[#dbe7e7] text-xs font-mono"
+                title={`${user.name} (${user.email})`}
+              >
+                <div className="w-5 h-5 rounded-full bg-[#0e6670] text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="font-semibold text-[#1f2a2e] hidden sm:inline max-w-[90px] truncate">
+                  {user.name}
+                </span>
+                {user.isGuest && (
+                  <span className="text-[10px] text-[#55696e] bg-[#eaf3f3] px-1.5 py-0.2 rounded-full">
+                    Demo
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={logout}
+                title="Sign Out"
+                className="p-1 rounded-md text-[#55696e] hover:text-[#1f2a2e] hover:bg-[#f4f8f8] transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs font-mono">
+              <Link
+                to="/login"
+                className="px-2.5 py-1 text-[#55696e] hover:text-[#1f2a2e] font-semibold"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className="px-3 py-1 rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] font-bold hover:bg-[#0e6670] hover:text-white transition-all shadow-xs"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

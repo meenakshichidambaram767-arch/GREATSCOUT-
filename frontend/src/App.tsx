@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from './context/AuthContext';
 import { MainLayout } from './components/layout/MainLayout';
 import { CnRLandingPage } from './pages/CnRLandingPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -9,6 +10,8 @@ import { OpportunityDetailPage } from './pages/OpportunityDetailPage';
 import { SignalsPage } from './pages/SignalsPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { IngestionJobsPage } from './pages/IngestionJobsPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { SignInPage } from './pages/SignInPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -23,34 +26,42 @@ const queryClient = new QueryClient({
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          {/* Main C&R Research-styled Landing Page at root */}
-          <Route path="/" element={<CnRLandingPage />} />
-          <Route path="/landing" element={<CnRLandingPage />} />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Main C&R Research-styled Landing Page at root */}
+            <Route path="/" element={<CnRLandingPage />} />
+            <Route path="/landing" element={<CnRLandingPage />} />
 
-          {/* GreatScout App Console under /app */}
-          <Route path="/app" element={<MainLayout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="opportunities" element={<OpportunitiesPage />} />
-            <Route path="opportunities/:id" element={<OpportunityDetailPage />} />
-            <Route path="signals" element={<SignalsPage />} />
-            <Route path="analytics" element={<AnalyticsPage />} />
-            <Route path="jobs" element={<IngestionJobsPage />} />
-          </Route>
+            {/* Auth Routes */}
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/register" element={<Navigate to="/signup" replace />} />
+            <Route path="/login" element={<SignInPage />} />
+            <Route path="/signin" element={<Navigate to="/login" replace />} />
 
-          {/* Legacy root app aliases for compatibility */}
-          <Route path="/dashboard" element={<Navigate to="/app" replace />} />
-          <Route path="/opportunities" element={<Navigate to="/app/opportunities" replace />} />
-          <Route path="/opportunities/:id" element={<Navigate to="/app/opportunities/:id" replace />} />
-          <Route path="/signals" element={<Navigate to="/app/signals" replace />} />
-          <Route path="/analytics" element={<Navigate to="/app/analytics" replace />} />
-          <Route path="/jobs" element={<Navigate to="/app/jobs" replace />} />
+            {/* GreatScout App Console under /app */}
+            <Route path="/app" element={<MainLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="opportunities" element={<OpportunitiesPage />} />
+              <Route path="opportunities/:id" element={<OpportunityDetailPage />} />
+              <Route path="signals" element={<SignalsPage />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
+              <Route path="jobs" element={<IngestionJobsPage />} />
+            </Route>
 
-          {/* 404 handler */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Legacy root app aliases for compatibility */}
+            <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+            <Route path="/opportunities" element={<Navigate to="/app/opportunities" replace />} />
+            <Route path="/opportunities/:id" element={<Navigate to="/app/opportunities/:id" replace />} />
+            <Route path="/signals" element={<Navigate to="/app/signals" replace />} />
+            <Route path="/analytics" element={<Navigate to="/app/analytics" replace />} />
+            <Route path="/jobs" element={<Navigate to="/app/jobs" replace />} />
+
+            {/* 404 handler */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

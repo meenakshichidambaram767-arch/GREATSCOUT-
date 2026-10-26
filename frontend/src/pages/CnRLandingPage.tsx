@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { 
   ArrowUpRight, 
   CheckCircle2, 
@@ -325,6 +326,11 @@ const HERO_WAYPOINTS: Waypoint[] = [
 
 export const CnRLandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user, logout } = useAuth();
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  const justRegistered = searchParams.get('welcome') === 'true';
+  const justSignedIn = searchParams.get('signedin') === 'true';
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'solutions' | 'sectors' | 'insights'>('solutions');
   const [activeSolutionIdx, setActiveSolutionIdx] = useState<number>(0);
@@ -571,6 +577,37 @@ export const CnRLandingPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Welcome Banner when navigated after Sign Up or Sign In */}
+      {showWelcomeBanner && (justRegistered || justSignedIn) && (
+        <div className="bg-gradient-to-r from-[#0c4e56] via-[#16717d] to-[#0c4e56] text-white px-6 py-2.5 text-xs font-mono flex items-center justify-between sticky top-0 z-50 border-b border-white/20 shadow-md">
+          <div className="max-w-[1400px] mx-auto w-full flex items-center justify-between gap-4">
+            <span className="flex items-center gap-2">
+              <span className="text-base">🎉</span>
+              <span className="font-bold">{justRegistered ? 'Welcome to GreatScout!' : 'Welcome back!'}</span>
+              <span className="hidden md:inline text-white/90">
+                {user ? `Workspace ready for ${user.name} (${user.company || 'Founder'})` : 'Your free workspace is active.'}
+              </span>
+            </span>
+            <div className="flex items-center gap-4 shrink-0">
+              <Link 
+                to="/app" 
+                className="underline font-bold text-white hover:text-white/80 flex items-center gap-1"
+              >
+                <span>Launch Console Now</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+              <button 
+                onClick={() => setShowWelcomeBanner(false)} 
+                className="text-white/70 hover:text-white text-xs px-1 cursor-pointer"
+                title="Dismiss banner"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 1. TOP HEADER NAVIGATION (C&R Clean White Header) */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#DDDDDD] px-6 sm:px-12 py-4 transition-all">
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
@@ -604,17 +641,58 @@ export const CnRLandingPage: React.FC = () => {
             </a>
           </nav>
 
-          {/* Right Action Button */}
-          <div className="flex items-center gap-4">
-            <Link
-              to="/app"
-              onMouseEnter={() => setCursorActive(true)}
-              onMouseLeave={() => setCursorActive(false)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#000000] hover:bg-[#16717d] text-white font-outfit text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              <span>Launch Platform</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </Link>
+          {/* Right Action Controls: Auth Status & Launch Button */}
+          <div className="flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eaf3f3] border border-[#dbe7e7] text-xs font-mono text-[#0e6670]">
+                  <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+                  <span className="font-bold truncate max-w-[110px]">{user.name}</span>
+                  {user.isGuest && <span className="text-[10px] text-[#55696e]">(Guest)</span>}
+                </div>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-xs text-[#55696e] hover:text-[#1f2a2e] font-outfit px-2 py-1 rounded-md hover:bg-[#f4f8f8] transition-colors cursor-pointer"
+                >
+                  Sign Out
+                </button>
+                <Link
+                  to="/app"
+                  onMouseEnter={() => setCursorActive(true)}
+                  onMouseLeave={() => setCursorActive(false)}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#000000] hover:bg-[#16717d] text-white font-outfit text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  <span>Console</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Link
+                  to="/login"
+                  className="px-3 py-1.5 text-xs font-semibold font-outfit text-[#444444] hover:text-[#16717d] transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 text-xs font-semibold font-outfit rounded-full bg-[#eaf3f3] text-[#0e6670] border border-[#dbe7e7] hover:bg-[#0e6670] hover:text-white transition-all shadow-xs"
+                >
+                  Sign Up Free
+                </Link>
+                <Link
+                  to="/app"
+                  onMouseEnter={() => setCursorActive(true)}
+                  onMouseLeave={() => setCursorActive(false)}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#000000] hover:bg-[#16717d] text-white font-outfit text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  <span className="hidden sm:inline">Launch Platform</span>
+                  <span className="sm:hidden">Launch</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
