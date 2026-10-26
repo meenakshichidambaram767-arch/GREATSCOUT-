@@ -20,6 +20,8 @@ import {
   TrendsIcon, 
   QuoteIcon 
 } from '../components/common/Icons';
+import { LiveActivityTicker } from '../components/visual/LiveActivityTicker';
+import { SemanticClusterMap } from '../components/visual/SemanticClusterMap';
 
 const TEAL_PALETTE = ['#0e6670', '#178996', '#22b0c2', '#33c3d5', '#5cd6e5'];
 
@@ -87,6 +89,9 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-8 font-outfit max-w-7xl mx-auto">
+      {/* Live Market Activity Ticker */}
+      <LiveActivityTicker />
+
       {/* Page Header: Clean, Architectural, Enterprise */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-[#e5eeee]">
         <div>
@@ -402,6 +407,16 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 2D Opportunity Galaxy & Semantic Cluster Map */}
+      {topOpportunities.length > 0 && (
+        <SemanticClusterMap
+          opportunities={topOpportunities}
+          onSelectOpportunity={(opp) => {
+            window.location.href = `/app/opportunities/${opp.id}`;
+          }}
+        />
+      )}
 
       {/* TOP OPPORTUNITIES LIST */}
       <div>

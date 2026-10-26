@@ -24,7 +24,7 @@ export const opportunitiesService = {
     return response.data;
   },
 
-  async updateOpportunityStatus(id: string, status: 'active' | 'starred' | 'archived'): Promise<Opportunity> {
+  async updateOpportunityStatus(id: string, status: 'active' | 'starred' | 'archived' | string): Promise<Opportunity> {
     const response = await apiClient.patch<Opportunity>(`/opportunities/${id}`, { status });
     return response.data;
   },

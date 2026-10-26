@@ -17,6 +17,10 @@ import {
   CheckIcon,
   ArrowUpRightIcon 
 } from '../components/common/Icons';
+import { Sparkles } from 'lucide-react';
+import { AskGreatScoutCopilot } from '../components/copilot/AskGreatScoutCopilot';
+import { copilotService } from '../services/copilotService';
+import { OpportunitySynthesizeResponse } from '../types/api';
 
 export const OpportunityDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +31,9 @@ export const OpportunityDetailPage: React.FC = () => {
   const [isPrdOpen, setIsPrdOpen] = useState(false);
   const [starring, setStarring] = useState(false);
   const [copiedTicket, setCopiedTicket] = useState<string | null>(null);
+  const [copilotOpen, setCopilotOpen] = useState(false);
+  const [memo, setMemo] = useState<OpportunitySynthesizeResponse | null>(null);
+  const [loadingMemo, setLoadingMemo] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -123,6 +130,14 @@ export const OpportunityDetailPage: React.FC = () => {
             <span>View Full Build Plan</span>
             <ArrowUpRightIcon size={13} />
           </button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setCopilotOpen(true)}
+            icon={<Sparkles className="w-3.5 h-3.5 text-[#0e6670]" />}
+          >
+            Interrogate with Copilot
+          </Button>
           <Button
             variant={opportunity.status === 'starred' ? 'primary' : 'secondary'}
             size="sm"
@@ -498,6 +513,87 @@ export const OpportunityDetailPage: React.FC = () => {
         )}
       </div>
 
+      {/* AI Strategy & Validation Brief Card */}
+      <div className="bg-gradient-to-br from-[#f8fafb] via-[#ffffff] to-[#eaf3f3] border border-[#dbe7e7] rounded-[24px] p-6 md:p-8 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0e6670] bg-[#eaf3f3] px-2.5 py-0.5 rounded-full border border-[#dbe7e7]">
+                AI Validation Synthesis
+              </span>
+              <span className="text-xs text-[#55696e]">Instant GTM & Experiment Playbook</span>
+            </div>
+            <h3 className="text-lg font-bold text-[#1f2a2e] mt-1 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#0e6670]" />
+              Executive Validation Memo & Challenger Angles
+            </h3>
+          </div>
+
+          {!memo && (
+            <Button
+              variant="primary"
+              size="sm"
+              loading={loadingMemo}
+              onClick={async () => {
+                if (!opportunity) return;
+                try {
+                  setLoadingMemo(true);
+                  const data = await copilotService.synthesizeOpportunity(opportunity.id);
+                  setMemo(data);
+                } catch (e) {
+                  console.error(e);
+                } finally {
+                  setLoadingMemo(false);
+                }
+              }}
+              icon={<Sparkles className="w-3.5 h-3.5" />}
+            >
+              Generate AI Strategic Memo
+            </Button>
+          )}
+        </div>
+
+        {memo && (
+          <div className="space-y-4 pt-2 animate-fadeIn text-xs leading-relaxed text-[#1f2a2e]">
+            <div className="p-4 rounded-2xl bg-white border border-[#dbe7e7] shadow-sm">
+              <span className="font-mono text-[10px] font-bold uppercase text-[#0e6670] block mb-1">
+                Executive Assessment:
+              </span>
+              <p className="text-sm font-medium">{memo.executive_summary}</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 rounded-2xl bg-white border border-[#dbe7e7]">
+                <span className="font-mono text-[10px] font-bold uppercase text-[#0e6670] block mb-1.5">
+                  ⚔️ Strategic Challenger Angles:
+                </span>
+                <ul className="space-y-1.5 list-disc list-inside text-[#37474f]">
+                  {memo.strategic_angles.map((ang, i) => (
+                    <li key={i}>{ang}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-[#dbe7e7]">
+                <span className="font-mono text-[10px] font-bold uppercase text-[#0e6670] block mb-1.5">
+                  🧪 Recommended 48-Hour Experiments:
+                </span>
+                <ul className="space-y-1.5 list-disc list-inside text-[#37474f]">
+                  {memo.validation_experiments.map((exp, i) => (
+                    <li key={i}>{exp}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#eaf3f3] border border-[#dbe7e7] flex items-center justify-between text-[11px] font-mono">
+              <span><b>Target ICP:</b> {memo.target_icp}</span>
+              <span className="text-[#0e6670] font-bold">Pricing: {memo.pricing_strategy}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Interactive Zero-to-Code Action Engine Modal */}
       <PRDModal
         isOpen={isPrdOpen}
@@ -505,6 +601,15 @@ export const OpportunityDetailPage: React.FC = () => {
         prd={prd}
         loading={loadingPrd}
       />
+
+      {/* Embedded Context Copilot Drawer */}
+      <AskGreatScoutCopilot
+        isOpen={copilotOpen}
+        onClose={() => setCopilotOpen(false)}
+        contextOpportunityId={opportunity.id}
+        initialQuery={`Synthesize customer frustration and recommend pricing for "${opportunity.title}"`}
+      />
     </div>
   );
 };
+

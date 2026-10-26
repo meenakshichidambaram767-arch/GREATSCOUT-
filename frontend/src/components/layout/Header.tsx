@@ -3,12 +3,14 @@ import { dashboardService } from '../../services/dashboardService';
 import { SystemHealth } from '../../types/api';
 import { Button } from '../common/Button';
 import { PlayIcon } from '../common/Icons';
+import { Sparkles } from 'lucide-react';
 
 export interface HeaderProps {
   onQuickIngest?: () => void;
+  onOpenCopilot?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
+export const Header: React.FC<HeaderProps> = ({ onQuickIngest, onOpenCopilot }) => {
   const [health, setHealth] = useState<SystemHealth | null>(null);
 
   const checkHealth = async () => {
@@ -43,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
 
       {/* Right Controls */}
       <div className="flex items-center gap-3.5">
-        {/* Status Pill: Subtle and Professional */}
+        {/* Status Pill */}
         <div
           className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono font-medium ${
             isConnected
@@ -68,6 +70,17 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
           </span>
         </div>
 
+        {/* AI Copilot Button */}
+        {onOpenCopilot && (
+          <button
+            onClick={onOpenCopilot}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#0e6670] to-[#178996] text-white hover:brightness-110 shadow-sm transition-all cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-white" />
+            <span>Copilot</span>
+          </button>
+        )}
+
         {/* Primary Action Button */}
         {onQuickIngest && (
           <Button
@@ -76,10 +89,11 @@ export const Header: React.FC<HeaderProps> = ({ onQuickIngest }) => {
             onClick={onQuickIngest}
             icon={<PlayIcon size={13} className="text-white mr-1.5" />}
           >
-            Trigger Pipeline
+            Run Pipeline
           </Button>
         )}
       </div>
     </header>
   );
 };
+

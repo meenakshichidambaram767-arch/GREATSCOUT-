@@ -88,12 +88,13 @@ export interface Opportunity {
   why_current_solutions_fail: string;
   suggested_solution: string;
   confidence_level: 'high' | 'medium' | 'low';
-  status: 'active' | 'starred' | 'archived';
+  status: 'active' | 'starred' | 'archived' | 'discovered' | 'validating' | 'interviewing' | 'building' | 'launched' | string;
   scores: OpportunityScoreBreakdown;
   signal_count: number;
   created_at: string;
   updated_at: string;
 }
+
 
 export interface EvidenceSourceInfo {
   platform: string;
@@ -245,3 +246,46 @@ export interface OpportunityPRD {
   markdown_content: string;
 }
 
+export interface CopilotCitedQuote {
+  id?: string;
+  author?: string;
+  source: string;
+  quote: string;
+  sentiment?: number;
+  opportunity_id?: string;
+  opportunity_title?: string;
+}
+
+export interface CopilotRelevantOpportunity {
+  id: string;
+  title: string;
+  category: string;
+  overall_score: number;
+  status: string;
+}
+
+export interface CopilotAskRequest {
+  query: string;
+  opportunity_id?: string;
+  api_key?: string;
+  provider?: string;
+}
+
+export interface CopilotAskResponse {
+  answer: string;
+  cited_quotes: CopilotCitedQuote[];
+  relevant_opportunities: CopilotRelevantOpportunity[];
+  suggested_followups: string[];
+  provider_used: string;
+}
+
+export interface OpportunitySynthesizeResponse {
+  opportunity_id: string;
+  executive_summary: string;
+  strategic_angles: string[];
+  target_icp: string;
+  pricing_strategy: string;
+  validation_experiments: string[];
+}
+
+export type PipelineStage = 'discovered' | 'validating' | 'interviewing' | 'building' | 'launched';
